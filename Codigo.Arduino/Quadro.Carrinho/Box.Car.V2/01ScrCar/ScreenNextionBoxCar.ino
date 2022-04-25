@@ -1,17 +1,27 @@
-// ************************************************
-// Biblioteca Nextion (screen)
-// Desenvolvido por Edson Silva
-// Date: 26/05/18
-// Comunicação Rx e Tx
-// ************************************************
+
+/**
+ * Biblioteca Nextion (screen)
+ * Desenvolvido por Edson Silva
+ * Date: 26/05/18
+ * Comunicação Rx e Tx padrão do microcontrolador
+ * 
+ * Observação: Fiz um ajuste na Lib do Nextion para aceitar 
+ * a passagem de parâmetro via ID do objeto do Nextion. 
+ * A função original só estava aceitando passagem por string 
+ * (nome do objeto criado no nextion). Assim consegui reduzir 
+ * o consumo da memória do microcontrolador. No final deste 
+ * código está o código original 'comentado' com a passagem 
+ * via string.
+ *  
+ */
 
 #include <Nextion.h>
 //#include <SoftwareSerial.h>
 //SoftwareSerial HMISerial(10, 11);
 
 
-/* Declaração dos ID's das Janelas
- * ------------------------------- */ 
+/* Declaração dos ID's das Janelas do Nextion
+ * ------------------------------------------ */ 
 uint8_t const JanelaSplash              =  0,
               JanelaMenu_Acao           =  1,
               JanelaSelecao             =  2,
@@ -21,8 +31,8 @@ uint8_t const JanelaSplash              =  0,
               JanelaVarGlobais          =  8,
               JanelaCreditos            =  9;
 
-/* Declaração dos ID's dos Objetos
- * ------------------------------- */
+/* Declaração dos ID's dos Objetos Nextion
+ * --------------------------------------- */
 uint8_t const IDAcaoArduino             =  1,
               IDStandBy                 = 29,
               IDArduinoExec             =  3,
@@ -323,13 +333,11 @@ void DataHoraOnScreen(byte *pDH, byte *pMM, byte *pAS){
 }
 
 
-
-
 /*************************************************************
  * 
- * 
  * CÓDIGO QUE EXECUTA BEM, MAS CONSOME MUITA MEMÓRIA SRAM
- * 
+ * POR USAR O NOME DA JANELA E DO OBJETO NA COMUNICAÇÃO COM
+ * O NEXTION
  * 
  *************************************************************/
 

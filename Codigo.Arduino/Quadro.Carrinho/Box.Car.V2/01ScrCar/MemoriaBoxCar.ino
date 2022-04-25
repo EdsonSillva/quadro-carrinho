@@ -8,6 +8,7 @@
 #include <Wire.h>
 
 #define pinLedUsandoEEPROM    11
+#define pinLedAlerta          13
 
 #define deviceEEPROM          0x50
 #define AddressDataSeg        0x00
@@ -18,29 +19,37 @@
 #define AddressBrilho         AddressDataSeg + 0x04
 #define AddressBeep           AddressDataSeg + 0x05
 
-#define AddressDataSegTxt 16
-#define AddressQtdeChar   AddressDataSegTxt + 0x00
-#define AddressIniTexto   AddressDataSegTxt + 0x01
+#define AddressDataSegTxt     16
+#define AddressQtdeChar       AddressDataSegTxt + 0x00
+#define AddressIniTexto       AddressDataSegTxt + 0x01
+
+#define CODE_EEPROM_NOT_AVAILABLE         254
 
 char    TextoMsg[50] = {0};
 
 void SetupEEPROM(){
   Wire.begin();           // entra no barramento I2c
+  pinMode(pinLedAlerta, OUTPUT);
+  digitalWrite(pinLedAlerta, LOW);
 }
 
 byte getPinLedUsoEEPROM(){
   return pinLedUsandoEEPROM;
 }
 
-//void StartSerial() {
-//  Serial.begin(9600);
-//  while(!Serial);  
-//}
+void AlertaEEPROMNaoResponde(){
+    BeepBuzzer(),digitalWrite(pinLedAlerta,HIGH),delay(500),BeepBuzzer(),digitalWrite(pinLedAlerta,LOW), delay(200);
+    BeepBuzzer(),digitalWrite(pinLedAlerta,HIGH),delay(500),BeepBuzzer(),digitalWrite(pinLedAlerta,LOW);
+}
 
 void getDadosOnEEPROM(byte *pCodeAcao, byte *pR, byte *pG, byte *pB, byte *pBrilho) {
 
   digitalWrite(pinLedUsandoEEPROM, HIGH);
     *pCodeAcao  = LerEEPROM((int)AddressCodeAcao);
+    if(*pCodeAcao == 254){
+      AlertaEEPROMNaoResponde();
+      return;
+    }
     *pR         = LerEEPROM((int)AddressR);
     *pG         = LerEEPROM((int)AddressG);
     *pB         = LerEEPROM((int)AddressB);
@@ -93,13 +102,28 @@ void GravarEEPROM(int offSet, unsigned int Dado) {
 
 byte LerEEPROM(int offSet) {
 
-  byte Dado = 0xFF;
+  // TODO: Ajustar esta rotina pois está travando o controlador quando não existe ligação física do hardware ou hardware de destino estiver travado
+
+  byte            Dado = 0xFF;
+  unsigned long   MaxWait = millis() + 10000;        // Seta o tempo máximo aguardando a resposta do device EEPROM
+  bool            IsMaxWait = false;
+  
   starEEPROMsetOffSet(offSet);
   Wire.endTransmission();
   Wire.requestFrom(deviceEEPROM, 1);
-    while(!Wire.available());
-    Dado = Wire.read();
-  Wire.endTransmission();
+  
+    while(!Wire.available()){
+      if(MaxWait < millis()){
+        IsMaxWait = true;
+        Dado = CODE_EEPROM_NOT_AVAILABLE;
+        break;              // Sai do loop
+      }
+    }
+
+    if(!IsMaxWait) {
+      Dado = Wire.read();
+    }
+    Wire.endTransmission();
 //  if(Serial) {
 //    Serial.print("Lendo Dado = "), Serial.print(Dado), Serial.print(" Address = "), Serial.println(offSet);
 //  }

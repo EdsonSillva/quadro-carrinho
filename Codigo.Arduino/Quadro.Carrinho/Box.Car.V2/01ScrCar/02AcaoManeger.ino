@@ -32,7 +32,11 @@ void ExecutarAcao(byte CodeAcao) {
       
       switch (CodeAcao) {
     
-        case 0:    case 255:                                        // Reset Ação
+        
+        
+        case 0:                                          // Reset Ação 
+        case 254:                                        // Device EEPROM não disponível
+        case 255:                                        // Reset Ação
           if(ChaveAcaoNew != ChaveAcaoOld){
               digitalWrite(pinControl, LOW);                        // Sinaliza Off para o outro Arduino
               delay(50);

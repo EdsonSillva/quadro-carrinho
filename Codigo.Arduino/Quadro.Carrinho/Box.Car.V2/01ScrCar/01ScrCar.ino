@@ -12,19 +12,22 @@
 // Exemplo de Macro
 //#define MacroSoma(NumA, NumB) (NumA + NumB)
 
-bool TelaStarted = false;                     // Guarda flag se a inicialização da tela aconteceu
+bool TelaStarted        = false;                      // Guarda flag se a inicialização da tela aconteceu
+bool EEPROMNaoResponde  = false;                      // Guarda a indicação do funcionamednto da EEPROM
+
+int Contador = 0;
 
 /*Função de Reset apontando para o endereço 0 do microcontrolador*/
-
 void (*ResetArduino)() = 0;           // para uso futuro com opção de reset no arduino
 
 void setup() {
 
+// Habilitar para debug
 //  Serial.begin(9600);
 //  while(!Serial);
 
   delay(3000);                                // Necessário para aguardar a inicialização física da tela e arduino Box.
-  
+
   pinMode(getPinControl(), OUTPUT);           // Pino de controle indicando quando este arduino pode iniciar suas rotinas baseado na Ação da tela
   pinMode(getPinLedUsoEEPROM(), OUTPUT);      // Pino com o Led indicando o uso na Leitura/Gravação da EEPROM
   digitalWrite(getPinControl(), LOW);
@@ -47,11 +50,9 @@ void setup() {
       delay(100);                             // Necessário para aguardar a inicialização do componente anterior.
 
       if(TelaStarted){
-        
-        byte  R,  G,  B, Brilho, CodeAcao;
 
-        getDadosOnEEPROM(&CodeAcao, &R, &G, &B, &Brilho);
-        setCodeRGBBrilhoOnScreen(CodeAcao, R, G, B, Brilho);
+        InicializacaoDadosMemoria();                    // Busca as informações da EEPROM e envia para o Nextion 
+        
         ShowDataOnScreen();                             // Mantêm a variável de Data Atualizada        
         ShowHoraOnScreen();                             // Mantêm a variável de Hora Atualizada
         ShowTempSysOnScreen();                          // Mantêm a variável de temperatura do sistema atualizada
@@ -70,15 +71,40 @@ void setup() {
 
 void loop() {
 
-  if(getStandByOnScreen() == 1) {
+  if(EEPROMNaoResponde) {
+    delay(1000);
+    InicializacaoDadosMemoria();
+  }else if(getStandByOnScreen() == 1) {
     delay(1000);
   } else {
     ExecutarAcao(getAcaoOnScreen());
   }
 }
 
+void InicializacaoDadosMemoria(){
 
-//void software_Reset() // Restarts program from beginning but does not reset the peripherals and registers
-//{
-//asm volatile ("  jmp 0");  
-//}  
+  byte  R=0,  G=0,  B=0, Brilho=0, CodeAcao;
+
+  EEPROMNaoResponde = false;
+  
+  getDadosOnEEPROM(&CodeAcao, &R, &G, &B, &Brilho);
+  if(CodeAcao == 254) {                                               // Device EEPROM não está respondendo
+    EEPROMNaoResponde = true;
+  }
+
+    //INICIO | Codigo de teste 
+    Contador++;
+    if(Contador>10){
+      EEPROMNaoResponde = false;
+      CodeAcao = 0;
+    }
+    // FIM | Codigo de teste
+
+  setCodeRGBBrilhoOnScreen(CodeAcao, R, G, B, Brilho);
+}
+
+
+void software_Reset() // Restarts program from beginning but does not reset the peripherals and registers
+{
+  asm volatile ("  jmp 0");  
+}  
