@@ -2,7 +2,7 @@
  * Gerenciador das Rotinas das Ações recebidas pela tela Nextion
  * Desenvolvido por Edson Silva
  * Date: 07/07/19  
- * Alteração: jun/22
+ * Alteração: jul/22
  ****************************************************************/
 
 #define     pinAcao             12
@@ -29,21 +29,6 @@ void LedsAcesos(String ChaveAcaoNew, byte R, byte G, byte B, byte Brilho){
   }
 }
 
-//void LedsXadrez(String ChaveAcaoNew, byte R, byte G, byte B, byte Brilho){
-//  if(ChaveAcaoNew != ChaveAcaoOld){
-//    bool IniciarImpar = true;
-//    tmpWaitRotina = 11000;
-//    while(getValorPinAcao()) {
-//      if(tmpWaitRotina > 10000){
-//        BoxLedsRGBXadrez(IniciarImpar, R, G, B, Brilho);
-//        IniciarImpar = !IniciarImpar;
-//        tmpWaitRotina = 0;
-//      }else { tmpWaitRotina++; delayMicroseconds(100);}
-//    }
-//    ChaveAcaoOld = ChaveAcaoNew;                  // Guarda a chave atual
-//  }
-//}
-
 void LedsXadrezFade(String ChaveAcaoNew, byte R, byte G, byte B, byte Brilho){
   if(ChaveAcaoNew != ChaveAcaoOld){
     bool  IniciarImpar = true;
@@ -52,62 +37,21 @@ void LedsXadrezFade(String ChaveAcaoNew, byte R, byte G, byte B, byte Brilho){
 
     tmpWaitRotina = 11000;
     while(getValorPinAcao()) {
+      
       if(tmpWaitRotina > 5000){
+        
         BoxLedsRGBXadrezFade(IniciarImpar, R, G, B, Brilho, Percentual);
-
         Percentual -= Intervalo;
         if((Percentual < 0) || (Percentual > 100)) {
           Intervalo *=-1;
           Percentual -= Intervalo;
         }
-
-/*
-// TODO: Apagar depois de testar
-//        if(Percentual < 0) {
-//          Intervalo *=-1;
-//          Percentual -= Intervalo;
-//        }
-//        else if(Percentual > 100) {
-//          Intervalo *=-1;
-//          Percentual -= Intervalo;
-//        }
-*/
         tmpWaitRotina = 0;
       }else { tmpWaitRotina++; delayMicroseconds(100); }
     }
     ChaveAcaoOld = ChaveAcaoNew;                  // Guarda a chave atual
   }
 }
-
-//void LedsColuna(String ChaveAcaoNew, byte R, byte G, byte B, byte Brilho){
-//  if(ChaveAcaoNew != ChaveAcaoOld){
-//    bool IniciarImpar = true;
-//    tmpWaitRotina = 11000;
-//    while(getValorPinAcao()) {
-//      if(tmpWaitRotina > 10000){
-//        BoxLedsRGBColuna(IniciarImpar, R, G, B, Brilho);
-//        IniciarImpar = !IniciarImpar;
-//        tmpWaitRotina = 0;
-//      }else { tmpWaitRotina++; delayMicroseconds(100);}
-//    }
-//    ChaveAcaoOld = ChaveAcaoNew;                  // Guarda a chave atual
-//  }
-//}
-
-//void LedsLinha(String ChaveAcaoNew, byte R, byte G, byte B, byte Brilho){
-//  if(ChaveAcaoNew != ChaveAcaoOld){
-//    bool IniciarImpar = true;
-//    tmpWaitRotina = 11000;
-//    while(getValorPinAcao()) {
-//      if(tmpWaitRotina > 10000){
-//        BoxLedsRGBLinha(IniciarImpar, R, G, B, Brilho);
-//        IniciarImpar = !IniciarImpar;
-//        tmpWaitRotina = 0;
-//      }else { tmpWaitRotina++; delayMicroseconds(100);}
-//    }
-//    ChaveAcaoOld = ChaveAcaoNew;                  // Guarda a chave atual
-//  }
-//}
 
 void Mensagem(String ChaveAcaoNew, byte R, byte G, byte B, byte Brilho, byte LinhaShow){
 
@@ -152,8 +96,6 @@ void MensagemDebug(String ChaveAcaoNew, byte R, byte G, byte B, byte Brilho, byt
     }
     QtdeCharDebug = QtdeChar + 25;
 
-//    Serial.print(MsgDebug);
-    
     while(getValorPinAcao()) {
       ShowMsgBox(MsgDebug, QtdeChar - 1, R, G, B, Brilho, LinhaShow);
     }
@@ -181,6 +123,7 @@ void LedsFuncaoAcao(String ChaveAcaoNew, byte R, byte G, byte B, byte Brilho, pT
 
 void LedsShowBoxFixoAcao(String ChaveAcaoNew, byte R, byte G, byte B, byte Brilho, pTipoVoidBox pFuncaoBox ){
   if(ChaveAcaoNew != ChaveAcaoOld){
+    IniciarMapaBox();
     pFuncaoBox(R, G, B, Brilho);
     while(getValorPinAcao());                     // Aguarda o cancelamento da ação 
     ChaveAcaoOld = ChaveAcaoNew;                  // Guarda a chave atual

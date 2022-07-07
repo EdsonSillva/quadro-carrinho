@@ -12,7 +12,7 @@
 //#define MacroSoma(NumA, NumB) (NumA + NumB)
 
 /* DEFINIÇÃO DE VARIÁVEL PARA USO NA COMPILAÇÃO PARA DEBUG */
-#define DEBUG true
+#define DEBUG false
 
 
 /*
@@ -69,137 +69,95 @@ void setup() {
 }
 
 bool inline getValorPinAcao() {
-    #if DEBUG == true
-        return true;
+    #if DEBUG == false
+      return digitalRead(pinAcao);
+    #else
+      return true;
     #endif
-    return digitalRead(pinAcao);
 }
 
 void loop() {
 
+  #if DEBUG == false
+
+    pinAcaoValor = getValorPinAcao();
+      
+    if(tmpWait >= 20000 || pinAcaoValor){
+  
+        if(pinAcaoValor){
+  
+          getDadosOnEEPROM(&CodeAcao, &R, &G, &B, &Brilho);
+  
+          ExecutarAcao(CodeAcao, pgm_read_byte(&gamma8[R]), pgm_read_byte(&gamma8[G]), pgm_read_byte(&gamma8[B]), Brilho);
+          ResetEfetuado = false;
+          delay(5);   // da  um tempo para os resets das portas
+  
+        } else {
+          if(!ResetEfetuado){
+            ExecutarAcao(0, 0, 0, 0, Brilho);   //Reset comandos 
+            ResetEfetuado = !ResetEfetuado;
+          }
+  
+        }
+        tmpWait = 0;
+    } else {
+        tmpWait++;
+    }
+
+  #else
+    EmDebug()
+  #endif
+}
+
+#if DEBUG == true
+
+void EmDebug(){
+  
   pinAcaoValor = getValorPinAcao();
     
   if(tmpWait >= 20000 || pinAcaoValor){
 
       if(pinAcaoValor){
 
-        #if DEBUG == true
-          Serial.print("\n << MODO DEBUG >>"),Serial.print("\n");
-          Serial.print("\n Lendo a EEPROM..."),Serial.print("\n");
-        #endif
+        Serial.print("\n << MODO DEBUG >>"),Serial.print("\n");
+        Serial.print("\n Lendo a EEPROM..."),Serial.print("\n");
 
         getDadosOnEEPROM(&CodeAcao, &R, &G, &B, &Brilho);
 
-        #if DEBUG == true
+        Serial.print("\n EEPROM Lida"),Serial.print("\n");
+        Serial.print("\nCode:"),Serial.print(CodeAcao),Serial.print("\n");
+        Serial.print("R:"),Serial.print(R),Serial.print("\n");
+        Serial.print("G:"),Serial.print(G),Serial.print("\n");
+        Serial.print("B:"),Serial.print(B),Serial.print("\n");
+        Serial.print("Br:"),Serial.print(Brilho),Serial.print("\n");
 
-          Serial.print("\n EEPROM Lida"),Serial.print("\n");
-          Serial.print("\nCode:"),Serial.print(CodeAcao),Serial.print("\n");
-          Serial.print("R:"),Serial.print(R),Serial.print("\n");
-          Serial.print("G:"),Serial.print(G),Serial.print("\n");
-          Serial.print("B:"),Serial.print(B),Serial.print("\n");
-          Serial.print("Br:"),Serial.print(Brilho),Serial.print("\n");
-          
+        char Msg[50]  = {0};
+        byte QtdeChar = 0;
 
-          char Msg[50]  = {0};
-          byte QtdeChar = 0;
+        getTextoOnEEPROM(Msg, &QtdeChar);
 
-          getTextoOnEEPROM(Msg, &QtdeChar);
-
-          Serial.print("\nQtdeMsg:"),Serial.print(QtdeChar),Serial.print("\n");
-          Serial.print("\nMsg:"),Serial.print(Msg),Serial.print("\n");
-          
-          
-          Serial.print("\nScan finalizado. Processando Comando...\n");
-          ExecutarAcao(CodeAcao, pgm_read_byte(&gamma8[R]), pgm_read_byte(&gamma8[G]), pgm_read_byte(&gamma8[B]), Brilho);
-          delay(5);   // da  um tempo para os resets das portas
-          ResetEfetuado = !ResetEfetuado;
-
-          
-          Serial.print("\nScan finalizado. Novo Scan em 1 minuto...\n");
-          delay(60000);
-          Serial.print("\nIniciando o Scan da EEPROM novamente\n\n");
-
-        #else
-          ExecutarAcao(CodeAcao, pgm_read_byte(&gamma8[R]), pgm_read_byte(&gamma8[G]), pgm_read_byte(&gamma8[B]), Brilho);
-          ResetEfetuado = false;
-          delay(5);   // da  um tempo para os resets das portas
-        #endif
+        Serial.print("\nQtdeMsg:"),Serial.print(QtdeChar),Serial.print("\n");
+        Serial.print("\nMsg:"),Serial.print(Msg),Serial.print("\n");
+        Serial.print("\nScan finalizado. Processando Comando...\n");
+        
+        ExecutarAcao(CodeAcao, pgm_read_byte(&gamma8[R]), pgm_read_byte(&gamma8[G]), pgm_read_byte(&gamma8[B]), Brilho);
+        
+        delay(5);   // da  um tempo para os resets das portas
+        ResetEfetuado = !ResetEfetuado;
+        
+        Serial.print("\nScan finalizado. Novo Scan em 1 minuto...\n");
+        delay(60000);
+        Serial.print("\nIniciando o Scan da EEPROM novamente\n\n");
 
       } else {
         if(!ResetEfetuado){
           ExecutarAcao(0, 0, 0, 0, Brilho);   //Reset comandos 
           ResetEfetuado = !ResetEfetuado;
         }
-
       }
       tmpWait = 0;
   } else {
       tmpWait++;
   }
 }
-
-
-/* bkp - com debug  */
-
-//  
-//void setup() {
-//
-//  pinAcao = getPinAcao();                     // Obtem o Pino de controle da Ação
-//  pinMode(pinAcao, INPUT);
-//  IniciarLeds(50);                            // inicializando os leds da fita com o brilho em default em 50
-//  TodosLedsAcesos(255, 255, 255);             // Acende todos os Leds do quadro
-//  SetupEEPROM();                              // Inicializar Wire para a comunicação com a EEPROM
-//  //IniciarBuzzer();                          // Inicializar Buzzer
-//
-////  StartSerial();                              // Usado somente para Debug
-//  delay(2000);                                // Necessário para aguardar a inicialização física Tela e periféricos
-//
-////  if(Serial) {
-////    Serial.println("Iniciado o Debug via Serial a 9600 kbps...");
-////  }
-////  
-//}
-//
-//bool inline getValorPinAcao() {
-//  return digitalRead(pinAcao);
-//  //return true;    // Usar para Teste
-//}
-//
-//void loop() {
-//
-//  pinAcaoValor = getValorPinAcao();
-//  
-//  if(tmpWait >= 20000 || pinAcaoValor){
-//      if(pinAcaoValor){
-//
-////        Serial.println("PinAcao Ligado ...");
-////        Serial.print("Iniciando Rotina Leitura EEPROM"), Serial.println("...");
-//        
-//        getDadosOnEEPROM(&CodeAcao, &R, &G, &B, &Brilho);
-//        
-////        Serial.print("Voltou da Rotina Leitura EEPROM"), Serial.println("...");
-//        //CodeAcao = 52, R = 0, G = 120, B = 210;   // Usado para testar este arduino stand alone
-//        
-////        Serial.print("Iniciando Rotina de Ação no quadro"), Serial.println("...");
-//        ExecutarAcao(CodeAcao, pgm_read_byte(&gamma8[R]), pgm_read_byte(&gamma8[G]), pgm_read_byte(&gamma8[B]), Brilho);
-////        Serial.print("Finalizando Rotina de Ação no quadro"), Serial.println("...");
-//        delay(5);   // da  um tempo para os resets das portas
-////        Serial.println("PinAcao Desligado ...");
-//
-//       } else {
-//        //resetCodeAcaoAnt();                 //reset o código de ação anterior    
-//        ExecutarAcao(0, 0, 0, 0, Brilho);   //Reset comandos 
-//        //Serial.print("PinAcao Not Is True......."), Serial.println(tmpWait);
-//      }
-//      tmpWait = 0;
-//  } else {
-//      tmpWait++;
-//
-////      if(Serial && tmpWait >= 20000 ) {
-////        Serial.println("Aguardando Ativação do Pino Ação...");
-////      }
-//  
-//  }
-//  
-//}
-//
+#endif

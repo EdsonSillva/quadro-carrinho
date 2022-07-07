@@ -2,7 +2,8 @@
  * Rotinas para controle de acesso na memória EEPROM
  * Desenvolvido por Edson Silva
  * I2C - Utiliza os pinos SDA(4) e SCL(5)
- * Date: 01/06/19  
+ * Date: 01/06/19
+ * Alteração: jul/22
  *****************************************************/
 
 #include <Wire.h>
@@ -18,41 +19,35 @@
 #define AddressBrilho         AddressDataSeg + 0x04
 #define AddressBeep           AddressDataSeg + 0x05
 
-#define AddressDataSegTxt 16
-#define AddressQtdeChar   AddressDataSegTxt + 0x00
-#define AddressIniTexto   AddressDataSegTxt + 0x01
+#define AddressDataSegTxt     16
+#define AddressQtdeChar       AddressDataSegTxt + 0x00
+#define AddressIniTexto       AddressDataSegTxt + 0x01
+
+#define CODE_EEPROM_NOT_AVAILABLE         254
 
 char    TextoMsg[50] = {0};
 
-byte      pinAcaoCtr              = 0x00;
-bool      pinAcaoCtrValor         = false;
-
 void SetupEEPROM(){
-  int addressI2c = 0x0A;
-  Wire.begin(addressI2c);           // entra no barramento I2c
-
-#if DEBUG  
-  if(Serial) Serial.print("\nIniciado o I2c no endereço: 0x0"), Serial.print(addressI2c, HEX), Serial.print("  Decimal: "), Serial.print(addressI2c, DEC);
-#endif
+  Wire.begin();                       // entra no barramento I2c (passivo)
 }
 
 byte getPinLedUsoEEPROM(){
   return pinLedUsandoEEPROM;
 }
 
-void StartSerial() {
-  Serial.begin(9600);
-  while(!Serial);  
-}
-
 void getDadosOnEEPROM(byte *pCodeAcao, byte *pR, byte *pG, byte *pB, byte *pBrilho) {
 
   *pCodeAcao  = LerEEPROM((int)AddressCodeAcao);
+  if(*pCodeAcao == 254){
+    // AlertaEEPROMNaoResponde();   // Não implementado neste segundo arduino
+    return;
+  }
   *pR         = LerEEPROM((int)AddressR);
   *pG         = LerEEPROM((int)AddressG);
   *pB         = LerEEPROM((int)AddressB);
   *pBrilho    = LerEEPROM((int)AddressBrilho);
 }
+
 
 void setDadosOnEEPROM(byte CodeAcao, byte R, byte G, byte B, byte Brilho) {
 
@@ -88,189 +83,39 @@ void getTextoOnEEPROM(char Texto[], byte *pQtdeChar) {
 
 void GravarEEPROM(int offSet, unsigned int Dado) {
 
-//  Serial.print("Gravando Dado = "), Serial.print(Dado), Serial.print(" Address = "), Serial.println(offSet);
   starEEPROMsetOffSet(offSet);
   Wire.write((byte)Dado);
   Wire.endTransmission();
   delay(5);
 }
 
-//byte LerEEPROM(int offSet) {
-//
-//  byte Dado = 0xFF;
-//  
-//  pinAcaoCtr = getPinAcao();
-//
-//  starEEPROMsetOffSet(offSet);
-//  Wire.endTransmission();
-//  Wire.requestFrom(deviceEEPROM, 1);
-//    while(!Wire.available()){
-//     Serial.print("Aguardando o Wire ficar Available"), Serial.print("..."), Serial.print(" para Address = "), Serial.println(offSet);      
-//     Serial.print("Lendo Pino Ação"), Serial.println("...");
-//      pinAcaoCtrValor = digitalRead(pinAcaoCtr);
-//     Serial.println("Lido Pino Ação");
-//      if(pinAcaoCtrValor==false){
-//          Serial.print("Pino ação Desligado"), Serial.println("...");
-//          Wire.endTransmission();
-//          return 0;
-//      }
-//    }
-//    Serial.print("Wire Disponível... Lendo Dado"), Serial.println("...");
-//    Dado = Wire.read();
-//    Serial.print("Wire Disponível... Dado Lido:"), Serial.println(Dado);
-//  Wire.endTransmission();
-////  if(Serial) {
-////    Serial.print("Lendo Dado = "), Serial.print(Dado), Serial.print(" Char("), Serial.write(Dado), Serial.print(") Address = "), Serial.println(offSet);
-////  }
-//  return Dado;
-//}
-
-
 byte LerEEPROM(int offSet) {
 
-  byte Dado = 0xFF;
+  byte            Dado = 0xFF;
+  unsigned long   MaxWait = millis() + 10000;        // Seta o tempo máximo de 10 segundos aguardando a resposta do device EEPROM
+  bool            IsMaxWait = false;
   
-//  pinAcaoCtr = getPinAcao();
-
   starEEPROMsetOffSet(offSet);
   Wire.endTransmission();
   Wire.requestFrom(deviceEEPROM, 1);
+  
     while(!Wire.available()){
-//     Serial.print("Aguardando o Wire ficar Available"), Serial.print("..."), Serial.print(" para Address = "), Serial.println(offSet);      
-//     Serial.print("Lendo Pino Ação"), Serial.println("...");
-//      pinAcaoCtrValor = digitalRead(pinAcaoCtr);
-//     Serial.println("Lido Pino Ação");
-//      if(pinAcaoCtrValor==false){
-//          Serial.print("Pino ação Desligado"), Serial.println("...");
-//          Wire.endTransmission();
-//          return 0;
-//      }
+      if(MaxWait < millis()){
+        IsMaxWait = true;
+        Dado = CODE_EEPROM_NOT_AVAILABLE;
+        break;              // Sai do loop
+      }
     }
-//    Serial.print("Wire Disponível... Lendo Dado"), Serial.println("...");
-    Dado = Wire.read();
-//    Serial.print("Wire Disponível... Dado Lido:"), Serial.println(Dado);
-  Wire.endTransmission();
-  
-//  if(Serial) {
-//    Serial.print("Lendo Dado = "), Serial.print(Dado), Serial.print(" Char("), Serial.write(Dado), Serial.print(") Address = "), Serial.println(offSet);
-//  }
-  
-  return Dado;
-}
 
-
-
-/* DIFERENTE
-byte LerEEPROM(int offSet) {
-
-  byte Dado = 0xFF;
-  starEEPROMsetOffSet(offSet);
-  Wire.endTransmission();
-  Wire.requestFrom(deviceEEPROM, 1);
-//    while(!Wire.available());
-    if(Wire.available())
+    if(!IsMaxWait) {
       Dado = Wire.read();
-    else {
-       if(Serial) {
-          Serial.print(".....Wire não disponível..."), Serial.print(" Address = "), Serial.println(offSet);
-       } 
     }
-  Wire.endTransmission();
-  if(Serial) {
-    Serial.print("Lendo Dado = "), Serial.print(Dado), Serial.print(" Address = "), Serial.println(offSet);
-  }
+    Wire.endTransmission();
   return Dado;
 }
-*/
+
 void starEEPROMsetOffSet(unsigned int offSet) {
   Wire.beginTransmission(deviceEEPROM);
     Wire.write( (int)(offSet >>    8) );
     Wire.write( (int)(offSet &  0xFF) );
 }
-
-/* *******************************************************************
- * Definição da classe de controle das informações na menória EEPROM 
- * *******************************************************************/
-/*
-class DadosEEPROM {
-  private:
-    byte _CodeAcao;
-    byte _R;
-    byte _G;
-    byte _B;
-    byte _Brilho;
-
-  public:
-    void setCodeAcao(byte);
-    void setR(byte);
-    void setG(byte);
-    void setB(byte);
-    void setBrilho(byte);
-
-    byte getCodeAcao();
-    byte getR();
-    byte getG();
-    byte getB();
-    byte getBrilho();
-
-};
-void DadosEEPROM::setCodeAcao(byte CodeAcao){
-  _CodeAcao = CodeAcao;
-}
-void DadosEEPROM::setR(byte R) {
-  _R = R;
-}
-void DadosEEPROM::setG(byte G) {
-  _G = G;
-}
-void DadosEEPROM::setB(byte B) {
-  _B = B;
-}
-void DadosEEPROM::setBrilho(byte Brilho) {
-  _Brilho = Brilho;
-}
-byte DadosEEPROM::getCodeAcao(){
-  return _CodeAcao;
-}
-byte DadosEEPROM::getR() {
-  return _R;
-}
-byte DadosEEPROM::getG() {
-  return _G;
-}
-byte DadosEEPROM::getB() {
-  return _B;
-}
-byte DadosEEPROM::getBrilho() {
-  return _Brilho;
-}
-
-void getDadosOnEEPROM() {
-
-  Dados.setCodeAcao(LerEEPROM((int)AddressCodeAcao));
-  Dados.setR(LerEEPROM((int)AddressR));
-  Dados.setG(LerEEPROM((int)AddressG));
-  Dados.setB(LerEEPROM((int)AddressB));
-  Dados.setBrilho(LerEEPROM((int)AddressBrilho));
-}
-
-DadosEEPROM Dados;
-*/
-/*
-byte CByteSerial(){
-
-  byte  Byte[] = {0xff, 0xff, 0xff};
-  byte  NumByte = 0xff;
-  char  Letra = 0xff;
-  String  strNum          = "";
-  
-  for( int x = 0; x < (Serial.available()+ 15); x++){
-    Letra = char(Serial.read());
-    if(isAlphaNumeric(Letra)) strNum.concat(Letra);
-    delay(1);
-  }
-  NumByte = byte(strNum.toInt());
-  return byte(strNum.toInt());
-  
-}
-*/

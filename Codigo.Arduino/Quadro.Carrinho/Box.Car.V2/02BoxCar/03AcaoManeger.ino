@@ -1,7 +1,8 @@
 /*****************************************************
  * Gerenciador das Ações recebidas pela tela Nextion
  * Desenvolvido por Edson Silva
- * Date: 27/05/18  
+ * Date: 27/05/18
+ * Alteração: jun/22
  ****************************************************/
 
 #define   ChaveAcao(CodeAcao, R, G, B, Brilho) ((String)(String(CodeAcao) + String(R) + String(G) + String(B) + String(Brilho)))

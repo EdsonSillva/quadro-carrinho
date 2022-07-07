@@ -122,9 +122,6 @@ byte LerEEPROM(int offSet) {
       Dado = Wire.read();
     }
     Wire.endTransmission();
-//  if(Serial) {
-//    Serial.print("Lendo Dado = "), Serial.print(Dado), Serial.print(" Address = "), Serial.println(offSet);
-//  }
   return Dado;
 }
 
@@ -133,90 +130,3 @@ void starEEPROMsetOffSet(unsigned int offSet) {
     Wire.write( (int)(offSet >>    8) );
     Wire.write( (int)(offSet &  0xFF) );
 }
-
-/* *******************************************************************
- * Definição da classe de controle das informações na menória EEPROM 
- * *******************************************************************/
-/*
-class DadosEEPROM {
-  private:
-    byte _CodeAcao;
-    byte _R;
-    byte _G;
-    byte _B;
-    byte _Brilho;
-
-  public:
-    void setCodeAcao(byte);
-    void setR(byte);
-    void setG(byte);
-    void setB(byte);
-    void setBrilho(byte);
-
-    byte getCodeAcao();
-    byte getR();
-    byte getG();
-    byte getB();
-    byte getBrilho();
-
-};
-void DadosEEPROM::setCodeAcao(byte CodeAcao){
-  _CodeAcao = CodeAcao;
-}
-void DadosEEPROM::setR(byte R) {
-  _R = R;
-}
-void DadosEEPROM::setG(byte G) {
-  _G = G;
-}
-void DadosEEPROM::setB(byte B) {
-  _B = B;
-}
-void DadosEEPROM::setBrilho(byte Brilho) {
-  _Brilho = Brilho;
-}
-byte DadosEEPROM::getCodeAcao(){
-  return _CodeAcao;
-}
-byte DadosEEPROM::getR() {
-  return _R;
-}
-byte DadosEEPROM::getG() {
-  return _G;
-}
-byte DadosEEPROM::getB() {
-  return _B;
-}
-byte DadosEEPROM::getBrilho() {
-  return _Brilho;
-}
-
-void getDadosOnEEPROM() {
-
-  Dados.setCodeAcao(LerEEPROM((int)AddressCodeAcao));
-  Dados.setR(LerEEPROM((int)AddressR));
-  Dados.setG(LerEEPROM((int)AddressG));
-  Dados.setB(LerEEPROM((int)AddressB));
-  Dados.setBrilho(LerEEPROM((int)AddressBrilho));
-}
-
-DadosEEPROM Dados;
-*/
-/*
-byte CByteSerial(){
-
-  byte  Byte[] = {0xff, 0xff, 0xff};
-  byte  NumByte = 0xff;
-  char  Letra = 0xff;
-  String  strNum          = "";
-  
-  for( int x = 0; x < (Serial.available()+ 15); x++){
-    Letra = char(Serial.read());
-    if(isAlphaNumeric(Letra)) strNum.concat(Letra);
-    delay(1);
-  }
-  NumByte = byte(strNum.toInt());
-  return byte(strNum.toInt());
-  
-}
-*/
