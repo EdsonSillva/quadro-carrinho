@@ -38,7 +38,7 @@ void MascararLetra(char Letra, char LetraMascarada[], byte *pFimBitMascara){
     break;
 
     case '?':
-      *pFimBitMascara=5;
+      *pFimBitMascara=4;
       LetraMascarada[0]=0b01100000;
       LetraMascarada[1]=0b10010000;
       LetraMascarada[2]=0b00100000;

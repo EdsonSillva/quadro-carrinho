@@ -6,7 +6,7 @@
  * Autor: Edson Silva
  * Data Inicio: 27/05/18
  * Data Fim:    Ago/20 - 1º versão
- * Data Alteração: 03/01/22
+ * Release:     jun/22
  * **********************************************************/
 // Exemplo de Macro
 //#define MacroSoma(NumA, NumB) (NumA + NumB)
@@ -18,7 +18,9 @@
 /*
  * PONTEIRO PARA AS FUNÇÕES ACENDER BOX TEMATICOS (FIXOS)
  */
-typedef void (*pTipoFuncaoVoid)(byte, byte, byte, byte);
+typedef void (*pTipoVoidBox)(byte, byte, byte, byte);
+typedef void (*pTipoVoid)(bool, byte, byte, byte, byte);
+typedef int (*pTipoFuncaoInt)(...);
 
 byte      CodeAcao          = 0xff,
           R                 = 0xff,

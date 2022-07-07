@@ -8,6 +8,7 @@
  * Autor: Edson Silva
  * Data Inicio: 27/05/18
  * Data Fim:    Ago/20 - 1º versão
+ * Release:     jun/22
  * ***********************************************************/
 // Exemplo de Macro
 //#define MacroSoma(NumA, NumB) (NumA + NumB)

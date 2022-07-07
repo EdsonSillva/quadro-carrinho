@@ -163,8 +163,8 @@ int PosicaoBoxCell(int Linha, int Coluna){
 
 int PosicaoBoxCellInvertido(int Linha, int Coluna){
     return (int)(qtd_Colunas * (Linha - 1)) + ( (Linha % 2) == 0 ? 
-                                                ( (Coluna - 1) )  : 
-                                                ( (qtd_Colunas - (Coluna) )) );
+                                                 Coluna - 1   : 
+                                                 qtd_Colunas - Coluna);
 }
 
 //FIM

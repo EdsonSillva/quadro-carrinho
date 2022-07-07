@@ -13,7 +13,7 @@ String ChaveAcaoOld          = "";
 byte  R,  G,  B, Brilho;
 bool Beep = true;
 
-//long TempoProc          = millis() + 1000;
+long Adormecido          = millis() + 500;
 
 byte getPinControl(){
   return pinControl;
@@ -72,7 +72,7 @@ void ExecutarAcao(byte CodeAcao) {
            * *******************************************************************/
             switch(CodeAcao) {                                       
 
-              case 61:                                      // Mensagem na Tela
+              case 61:                                          // Mensagem na Tela
                   if(ChaveAcaoNew != ChaveAcaoOld){
                       char Texto[50] = {0};
                       byte QtdeChar = 0;
@@ -105,8 +105,8 @@ void ExecutarAcao(byte CodeAcao) {
    * Rotinas de configuração das variáveis de Data, hora, tempertura e humidade
    ******************************************************************************/
  
- // if(millis() >= TempoProc){
-    if(Beep) BeepBuzzer();
+  if(Beep) BeepBuzzer();
+  if(millis() >= Adormecido){
     ShowDataOnScreen();                             // Mantêm a variável de Data Atualizada        
     ShowHoraOnScreen();                             // Mantêm a variável de Hora Atualizada
     ShowTempSysOnScreen();                          // Mantêm a variável de temperatura do sistema atualizada
@@ -114,8 +114,8 @@ void ExecutarAcao(byte CodeAcao) {
     ShowHumidadeOnScreen();                         // Mantêm a variável de humidade atualizada
     setLDROnScreen();                               // Informa ao Screen o valor da variável de luminosidade
    
- //     TempoProc = millis() + 1000;                    // Acrescenta mais 1 segundo
- // }
+    Adormecido = millis() + 500;                    // Acrescenta mais 0,5 segundo
+  }
 }
 
 /* ******************************************************************************

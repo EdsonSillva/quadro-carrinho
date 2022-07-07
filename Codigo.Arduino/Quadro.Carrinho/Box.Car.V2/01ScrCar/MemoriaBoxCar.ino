@@ -28,7 +28,7 @@
 char    TextoMsg[50] = {0};
 
 void SetupEEPROM(){
-  Wire.begin();           // entra no barramento I2c
+  Wire.begin();                           // entra no barramento I2c
   pinMode(pinLedAlerta, OUTPUT);
   digitalWrite(pinLedAlerta, LOW);
 }
@@ -102,10 +102,8 @@ void GravarEEPROM(int offSet, unsigned int Dado) {
 
 byte LerEEPROM(int offSet) {
 
-  // TODO: Ajustar esta rotina pois está travando o controlador quando não existe ligação física do hardware ou hardware de destino estiver travado
-
   byte            Dado = 0xFF;
-  unsigned long   MaxWait = millis() + 10000;        // Seta o tempo máximo aguardando a resposta do device EEPROM
+  unsigned long   MaxWait = millis() + 10000;        // Seta o tempo máximo de 10 segundos aguardando a resposta do device EEPROM
   bool            IsMaxWait = false;
   
   starEEPROMsetOffSet(offSet);
