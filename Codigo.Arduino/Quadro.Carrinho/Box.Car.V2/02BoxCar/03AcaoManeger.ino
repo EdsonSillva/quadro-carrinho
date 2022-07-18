@@ -94,7 +94,11 @@ void ExecutarAcao(byte CodeAcao, byte R, byte G, byte B, byte Brilho) {
         break;  
 
         case AcaoIcon006:                                          // Ação acender Batman box 
-          LedsShowBoxFixoAcao(ChaveAcaoNew, R, G, B, Brilho, BoxLedsBatmanRGB);      
+
+          LedsCascata(ChaveAcaoNew, R, G, B, Brilho);              // Ação cascata no Quadro
+          
+          // LedsShowBoxFixoAcao(ChaveAcaoNew, R, G, B, Brilho, BoxLedsBatmanRGB);      // terá q ser remanejado para outra Ação
+          
         break;  
 
         case AcaoIcon007:                                          // Ação acender star War box 

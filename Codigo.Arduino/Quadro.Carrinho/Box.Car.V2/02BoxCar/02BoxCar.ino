@@ -14,13 +14,20 @@
 /* DEFINIÇÃO DE VARIÁVEL PARA USO NA COMPILAÇÃO PARA DEBUG */
 #define DEBUG false
 
-
 /*
  * PONTEIRO PARA AS FUNÇÕES ACENDER BOX TEMATICOS (FIXOS)
  */
 typedef void (*pTipoVoidBox)(byte, byte, byte, byte);
 typedef void (*pTipoVoid)(bool, byte, byte, byte, byte);
 typedef int (*pTipoFuncaoInt)(...);
+
+typedef struct cascata_t {
+  uint8_t   Coluna;
+  int8_t    Linha;
+  uint8_t   Arrasto;
+  float     Percentual;
+  bool      Finalizado;
+} cascata_t;
 
 byte      CodeAcao          = 0xff,
           R                 = 0xff,

@@ -39,6 +39,7 @@
 #define LinhaPosicaoDada    05
 #define ColunaPosicaoDada   06
 
+
 // Definições do Objeto de controle dos Led
 //******************************************
 
@@ -290,6 +291,54 @@ void BoxLedsRGBLinha(bool IniciarImpar, byte R, byte G, byte B, byte Br){
     }
     VitrineLedsRGB(R, G, B, Br);
     ShowLeds(500);
+
+}
+
+void LedsShowBoxCascata(byte R, byte G, byte B, byte Br, cascata_t cascata[], uint8_t coluna){
+
+  const uint8_t _MIN_LINHA =  1;
+  const uint8_t _MAX_LINHA = 14;
+
+  byte   RShow = 0,
+         GShow = 0,
+         BShow = 0;
+  float  CabecaLinha    = 100.0;                        // 100% do brilho do led
+  int8_t linhaBase      = cascata[coluna].Linha;
+  int8_t fimArrasto     = cascata[coluna].Linha - cascata[coluna].Arrasto;
+  
+  fimArrasto = fimArrasto > _MIN_LINHA ? fimArrasto : _MIN_LINHA;
+
+  if(linhaBase > 14){
+
+    //uint8_t DiferencaLinhaMaxima  = linhaBase - 14;
+    //float PercentualReducao       = cascata[coluna].Percentual * DiferencaLinhaMaxima;
+    //CabecaLinha = CabecaLinha - PercentualReducao;
+    CabecaLinha = CabecaLinha - (cascata[coluna].Percentual * (linhaBase - _MAX_LINHA));
+    linhaBase = _MAX_LINHA;         // Estabelece no máximo de linhas
+
+    if((cascata[coluna].Linha - cascata[coluna].Arrasto) > _MAX_LINHA){
+      cascata[coluna].Finalizado = true;
+    }
+  }
+
+  RShow = (byte)(R * CabecaLinha);
+  GShow = (byte)(G * CabecaLinha);
+  BShow = (byte)(B * CabecaLinha);
+
+  if (Leds.getBrightness() != (uint8_t)Br) { setBrilho((int)Br); }
+
+  for(int8_t linha = linhaBase; linha >= fimArrasto; linha--){
+
+      Leds.setPixelColor(PosicaoBoxCellInvertido(linha, (int)cascata[coluna].Coluna), Leds.Color(GShow, RShow, BShow));
+
+      // Vai diminuindo o brilho
+      CabecaLinha = CabecaLinha - cascata[coluna].Percentual;
+      RShow = (byte)(R * CabecaLinha);
+      GShow = (byte)(G * CabecaLinha);
+      BShow = (byte)(B * CabecaLinha);
+
+  }
+  ShowLeds(150);
 
 }
 
