@@ -11,7 +11,6 @@ String    ChaveAcaoOld          = "";
 long      tmpWaitRotina         = 0x00;
 
 
-
 byte getPinAcao(){
   return pinAcao;
 }
@@ -22,6 +21,14 @@ void ResetAcao(String ChaveAcaoNew, byte R, byte G, byte B, byte Brilho){
     ChaveAcaoOld = ChaveAcaoNew;                  // Guarda a chave atual
   }
 }
+
+void ResetAcao(String ChaveAcaoNew, led_t Led){
+  if(ChaveAcaoNew != ChaveAcaoOld){
+    BoxLedsRGB(Led.R, Led.G, Led.B, Led.Brilho);            // Apaga os leds
+    ChaveAcaoOld = ChaveAcaoNew;                            // Guarda a chave atual
+  }
+}
+
 
 void LedsAcesos(String ChaveAcaoNew, byte R, byte G, byte B, byte Brilho){
   if(ChaveAcaoNew != ChaveAcaoOld){
@@ -129,9 +136,8 @@ void LedsCascata(String ChaveAcaoNew, byte R, byte G, byte B, byte Brilho) {
     
     tmpWaitRotina                     = 11000;
     uint8_t sizeCascata               = 15;
-    cascata_t Cascata[sizeCascata];
-
-    InicializaCascata(Cascata, &sizeCascata);
+    uint8_t colunasFeitas             = 0;
+    cascata_t cascata[sizeCascata];
 
     // Mantem a vitrine acesa
     VitrineLedsRGB(R, G, B, Brilho);
@@ -139,18 +145,26 @@ void LedsCascata(String ChaveAcaoNew, byte R, byte G, byte B, byte Brilho) {
     while(getValorPinAcao()) {
 
       if(tmpWaitRotina > 10000){
+
+        InicializaCascata(cascata, &sizeCascata);
+        colunasFeitas = 0;
         
-        while(getValorPinAcao()){
+        while(getValorPinAcao() && colunasFeitas < 14){
 
           for(uint8_t coluna = 0; coluna <= 14 && getValorPinAcao(); coluna++){
 
-            if(Cascata[coluna].Linha > 0 && (!Cascata[coluna].Finalizado)){
+            if(cascata[coluna].Linha > 0 && (!cascata[coluna].Finalizado)){
 
-              LedsShowBoxCascata(R, G, B, Brilho, Cascata, coluna);
+              LedsShowBoxCascata(R, G, B, Brilho, cascata, coluna);
               
             }
 
-            Cascata[coluna].Linha++;
+            if((cascata[coluna].Linha - cascata[coluna].Arrasto) > 14){
+              colunasFeitas++;
+              cascata[coluna].Finalizado = true;
+            }
+
+            cascata[coluna].Linha++;
           }
         }
         
@@ -163,8 +177,6 @@ void LedsCascata(String ChaveAcaoNew, byte R, byte G, byte B, byte Brilho) {
   }
      
 }
-
-
 
 void LedsFuncaoAcao(String ChaveAcaoNew, byte R, byte G, byte B, byte Brilho, pTipoVoid pFuncaoAcao){
   if(ChaveAcaoNew != ChaveAcaoOld){

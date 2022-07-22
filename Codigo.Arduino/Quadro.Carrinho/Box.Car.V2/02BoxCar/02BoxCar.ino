@@ -29,6 +29,14 @@ typedef struct cascata_t {
   bool      Finalizado;
 } cascata_t;
 
+typedef struct led_t {
+  byte R;
+  byte G;
+  byte B;
+  byte Brilho;
+} led_t;
+
+
 byte      CodeAcao          = 0xff,
           R                 = 0xff,
           G                 = 0xff,

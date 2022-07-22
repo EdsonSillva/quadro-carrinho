@@ -49,20 +49,20 @@ Adafruit_NeoPixel Leds =
 
 int StartFadeUp = 0;
 
-word MapaBox[qtd_Linhas + 1] = {0b0000000000000000      // Linha 01 do quadro
-                               ,0b0000000000000000      // Linha 02 do quadro
-                               ,0b0000000000000000      // Linha 03 do quadro
-                               ,0b0000000000000000      // Linha 04 do quadro
-                               ,0b0000000000000000      // Linha 05 do quadro
-                               ,0b0000000000000000      // Linha 06 do quadro
-                               ,0b0000000000000000      // Linha 07 do quadro
-                               ,0b0000000000000000      // Linha 08 do quadro
-                               ,0b0000000000000000      // Linha 09 do quadro
-                               ,0b0000000000000000      // Linha 10 do quadro
-                               ,0b0000000000000000      // Linha 11 do quadro
-                               ,0b0000000000000000      // Linha 12 do quadro
-                               ,0b0000000000000000      // Linha 13 do quadro
-                               ,0b0000000000000000      // Linha 14 do quadro
+word MapaBox[qtd_Linhas + 1] = {0b0000000000000000      // Linha 01 do quadro e cada bit representa a coluna
+                               ,0b0000000000000000      // Linha 02 do quadro e cada bit representa a coluna
+                               ,0b0000000000000000      // Linha 03 do quadro e cada bit representa a coluna
+                               ,0b0000000000000000      // Linha 04 do quadro e cada bit representa a coluna
+                               ,0b0000000000000000      // Linha 05 do quadro e cada bit representa a coluna
+                               ,0b0000000000000000      // Linha 06 do quadro e cada bit representa a coluna
+                               ,0b0000000000000000      // Linha 07 do quadro e cada bit representa a coluna
+                               ,0b0000000000000000      // Linha 08 do quadro e cada bit representa a coluna
+                               ,0b0000000000000000      // Linha 09 do quadro e cada bit representa a coluna
+                               ,0b0000000000000000      // Linha 10 do quadro e cada bit representa a coluna
+                               ,0b0000000000000000      // Linha 11 do quadro e cada bit representa a coluna
+                               ,0b0000000000000000      // Linha 12 do quadro e cada bit representa a coluna
+                               ,0b0000000000000000      // Linha 13 do quadro e cada bit representa a coluna
+                               ,0b0000000000000000      // Linha 14 do quadro e cada bit representa a coluna
                                };
 
 /***********************************
@@ -194,6 +194,17 @@ void BoxLedsRGB(byte R, byte G, byte B, byte Br){
     ShowLeds(500);
 }
 
+void BoxLedsRGB(led_t LedCor){
+
+    if (Leds.getBrightness() != (uint8_t)LedCor.Brilho) { setBrilho((int)LedCor.Brilho); }
+    
+    for(int Led = 0; Led < Total_Leds; Led++){
+      Leds.setPixelColor(Led, Leds.Color(LedCor.G, LedCor.R, LedCor.B));
+    }
+    ShowLeds(500);
+}
+
+
 void BoxLedsRGBXadrezFade(bool IniciarImpar, byte R, byte G, byte B, byte Br, int PercentualRecebido){
 
     byte  RLow, GLow, BLow, RHigh, GHigh, BHigh, RShow,  GShow,  BShow;
@@ -308,17 +319,11 @@ void LedsShowBoxCascata(byte R, byte G, byte B, byte Br, cascata_t cascata[], ui
   
   fimArrasto = fimArrasto > _MIN_LINHA ? fimArrasto : _MIN_LINHA;
 
-  if(linhaBase > 14){
+  if(linhaBase > _MAX_LINHA){
 
-    //uint8_t DiferencaLinhaMaxima  = linhaBase - 14;
-    //float PercentualReducao       = cascata[coluna].Percentual * DiferencaLinhaMaxima;
-    //CabecaLinha = CabecaLinha - PercentualReducao;
     CabecaLinha = CabecaLinha - (cascata[coluna].Percentual * (linhaBase - _MAX_LINHA));
     linhaBase = _MAX_LINHA;         // Estabelece no máximo de linhas
 
-    if((cascata[coluna].Linha - cascata[coluna].Arrasto) > _MAX_LINHA){
-      cascata[coluna].Finalizado = true;
-    }
   }
 
   RShow = (byte)(R * CabecaLinha);
@@ -339,7 +344,6 @@ void LedsShowBoxCascata(byte R, byte G, byte B, byte Br, cascata_t cascata[], ui
 
   }
   ShowLeds(150);
-
 }
 
  void BoxFade(bool Par, int R, int G, int B){
@@ -355,7 +359,7 @@ void LedsShowBoxCascata(byte R, byte G, byte B, byte Br, cascata_t cascata[], ui
 
 void FadeUp(int Inicio, int R, int G, int B){
 
-      for(int j = StartFadeUp; j < 256; j++){
+    for(int j = StartFadeUp; j < 256; j++){
         setCorBoxFade(Inicio, j, j, j);        
         Leds.show();
     }
@@ -530,9 +534,7 @@ void SobeEmColunaInvertido(byte R, byte G, byte B, int wait) {
  *   
  *****************************************************/
 
-
 void BoxLedsBatmanRGB(byte R, byte G, byte B, byte Br){
-//    IniciarMapaBox();
     MapaBox[2] = 0b1110000000000001;      // Linha 03 do quadro
     MapaBox[3] = 0b1110000000000001;      // Linha 04 do quadro
     MapaBox[4] = 0b1110000000000001;      // Linha 05 do quadro
@@ -540,7 +542,6 @@ void BoxLedsBatmanRGB(byte R, byte G, byte B, byte Br){
 }
 
 void BoxLedsMotosRGB(byte R, byte G, byte B, byte Br){
-//    IniciarMapaBox();
     MapaBox[2] = 0b0000000001111111;      // Linha 03 do quadro
     MapaBox[3] = 0b0000000000000011;      // Linha 04 do quadro
 
@@ -548,7 +549,6 @@ void BoxLedsMotosRGB(byte R, byte G, byte B, byte Br){
 }
 
 void BoxLedsStarWarsRGB(byte R, byte G, byte B, byte Br){
-//    IniciarMapaBox();
     MapaBox[5] = 0b1110000000000001;      // Linha 06 do quadro
     MapaBox[6] = 0b1110000000000001;      // Linha 07 do quadro
     MapaBox[7] = 0b1100000000000001;      // Linha 08 do quadro
@@ -566,7 +566,6 @@ void BoxLedsLamborghiniRGB(byte R, byte G, byte B, byte Br){
 }
 
 void BoxLedsPorcheRGB(byte R, byte G, byte B, byte Br){
-//    IniciarMapaBox();
     MapaBox[10] = 0b0000000000001111;      // Linha 11 do quadro
     MapaBox[11] = 0b0000000000001111;      // Linha 12 do quadro
     MapaBox[12] = 0b0000000000001111;      // Linha 13 do quadro
@@ -575,21 +574,18 @@ void BoxLedsPorcheRGB(byte R, byte G, byte B, byte Br){
 }
 
 void BoxLedsTeslaRGB(byte R, byte G, byte B, byte Br){
-//    IniciarMapaBox();
     MapaBox[13] = 0b0000000000111001;      // Linha 12 do quadro
 
     ShowMapaBoxes(R, G, B, Br, 50);
 }
 
 void BoxLedsBMWRGB(byte R, byte G, byte B, byte Br){
-//    IniciarMapaBox();
     MapaBox[13] = 0b0000000111000001;      // Linha 12 do quadro
 
     ShowMapaBoxes(R, G, B, Br, 50);
 }
 
 void BoxLedsFordRGB(byte R, byte G, byte B, byte Br){
-//    IniciarMapaBox();
     MapaBox[8]  = 0b0000001110000001;      // Linha 09 do quadro
     MapaBox[9]  = 0b0000111110000001;      // Linha 10 do quadro
     MapaBox[10] = 0b0000111100000001;      // Linha 11 do quadro
@@ -598,35 +594,26 @@ void BoxLedsFordRGB(byte R, byte G, byte B, byte Br){
 }
 
 void BoxLedsAstonMartinRGB(byte R, byte G, byte B, byte Br){
-//    IniciarMapaBox();
     MapaBox[10] = 0b0000000011110001;      // Linha 11 do quadro
-
     ShowMapaBoxes(R, G, B, Br, 50);
 }
 
 void BoxLedsPaganiRGB(byte R, byte G, byte B, byte Br){
-//    IniciarMapaBox();
     MapaBox[8]  = 0b0000000000011001;      // Linha 09 do quadro
-
     ShowMapaBoxes(R, G, B, Br, 50);
 }
 
 void BoxLedsMacLarenRGB(byte R, byte G, byte B, byte Br){
-//    IniciarMapaBox();
     MapaBox[9]  = 0b0000000001110001;      // Linha 09 do quadro
-
     ShowMapaBoxes(R, G, B, Br, 50);
 }
 
 void BoxLedsAudiRGB(byte R, byte G, byte B, byte Br){
-//    IniciarMapaBox();
     MapaBox[6]  = 0b0000000010000001;      // Linha 09 do quadro
-
     ShowMapaBoxes(R, G, B, Br, 50);
 }
 
 void BoxLedsCorvetteRGB(byte R, byte G, byte B, byte Br){
-//    IniciarMapaBox();
     MapaBox[11]  = 0b0000011111110001;      // Linha 09 do quadro
     MapaBox[12]  = 0b0000011111110001;      // Linha 09 do quadro
 
@@ -634,14 +621,12 @@ void BoxLedsCorvetteRGB(byte R, byte G, byte B, byte Br){
 }
 
 void BoxLedsNissanRGB(byte R, byte G, byte B, byte Br){
-//    IniciarMapaBox();
     MapaBox[5]  = 0b0000000000011111;      // Linha 09 do quadro
 
     ShowMapaBoxes(R, G, B, Br, 50);
 }
 
 void BoxLedsFerrariRGB(byte R, byte G, byte B, byte Br){
-//    IniciarMapaBox();
     MapaBox[4]  = 0b0000001000000001;      // Linha 09 do quadro
     MapaBox[7]  = 0b0000000000001111;      // Linha 09 do quadro
     
@@ -649,92 +634,68 @@ void BoxLedsFerrariRGB(byte R, byte G, byte B, byte Br){
 }
 
 void BoxLedsMercedesRGB(byte R, byte G, byte B, byte Br){
-//    IniciarMapaBox();
     MapaBox[6]  = 0b0000000000000111;      // Linha 09 do quadro
-
     ShowMapaBoxes(R, G, B, Br, 50);
 }
 
 void BoxLedsHondaRGB(byte R, byte G, byte B, byte Br){
-//    IniciarMapaBox();
     MapaBox[6]   = 0b0000000000111001;      // Linha 09 do quadro
-
     ShowMapaBoxes(R, G, B, Br, 50);
 }
 
 void BoxLedsAcuraRGB(byte R, byte G, byte B, byte Br){
-//    IniciarMapaBox();
     MapaBox[13]  = 0b0000000000000111;      // Linha 09 do quadro
-
     ShowMapaBoxes(R, G, B, Br, 50);
 }
 
 void BoxLedsJaguarRGB(byte R, byte G, byte B, byte Br){
-//    IniciarMapaBox();
     MapaBox[7]  = 0b0000000000110001;      // Linha 09 do quadro
-
     ShowMapaBoxes(R, G, B, Br, 50);
 }
 
 void BoxLedsVelozesFurososRGB(byte R, byte G, byte B, byte Br){
-//    IniciarMapaBox();
     MapaBox[2]  = 0b0000111100000001;      // Linha 09 do quadro
     MapaBox[3]  = 0b0001110000000001;      // Linha 09 do quadro
-
     ShowMapaBoxes(R, G, B, Br, 50);
 }
 
 void BoxLedsDodgeRGB(byte R, byte G, byte B, byte Br){
-//    IniciarMapaBox();
     MapaBox[7]  = 0b0000000111000001;      // Linha 09 do quadro
     MapaBox[8]  = 0b0000000001100001;      // Linha 09 do quadro
-
     ShowMapaBoxes(R, G, B, Br, 50);
 }
 
 void BoxLedsVolksRGB(byte R, byte G, byte B, byte Br){
-//    IniciarMapaBox();
     MapaBox[6]  = 0b0000001000000001;      // Linha 09 do quadro
     MapaBox[7]  = 0b0000111000000001;      // Linha 09 do quadro
     MapaBox[8]  = 0b0000110000000001;      // Linha 09 do quadro
     MapaBox[9]  = 0b0000100000000001;      // Linha 09 do quadro
-
     ShowMapaBoxes(R, G, B, Br, 50);
 }
 
 void BoxLedsFiatRGB(byte R, byte G, byte B, byte Br){
-//    IniciarMapaBox();
     MapaBox[6]  = 0b0000000100000001;      // Linha 09 do quadro
-
     ShowMapaBoxes(R, G, B, Br, 50);
 }
 
 void BoxLedsCadLacRGB(byte R, byte G, byte B, byte Br){
-//    IniciarMapaBox();
     MapaBox[5]  = 0b0000000000100001;      // Linha 09 do quadro
     MapaBox[8]  = 0b0010000000000001;      // Linha 09 do quadro
-
     ShowMapaBoxes(R, G, B, Br, 50);
 }
 
 void BoxLedsBentleyRGB(byte R, byte G, byte B, byte Br){
-//    IniciarMapaBox();
     MapaBox[3]  = 0b0000000000000101;      // Linha 09 do quadro
-
     ShowMapaBoxes(R, G, B, Br, 50);
 }
 
 void BoxLedsMasdaRGB(byte R, byte G, byte B, byte Br){
-//    IniciarMapaBox();
     MapaBox[4]  = 0b0000000001100001;      // Linha 09 do quadro
-
     ShowMapaBoxes(R, G, B, Br, 50);
 }
 
 void BoxLedsBuickRGB(byte R, byte G, byte B, byte Br){
-//    IniciarMapaBox();
     MapaBox[5]  = 0b0000000001000001;      // Linha 09 do quadro
-
     ShowMapaBoxes(R, G, B, Br, 50);
 }
 
