@@ -12,7 +12,7 @@
 //#define MacroSoma(NumA, NumB) (NumA + NumB)
 
 /* DEFINIÇÃO DE VARIÁVEL PARA USO NA COMPILAÇÃO PARA DEBUG */
-#define DEBUG false
+#define DEBUG true
 
 /*
  * PONTEIRO PARA AS FUNÇÕES ACENDER BOX TEMATICOS (FIXOS)
@@ -84,7 +84,8 @@ void setup() {
 }
 
 bool inline getValorPinAcao() {
-    #if DEBUG == false
+
+    #if DEBUG == true
       return digitalRead(pinAcao);
     #else
       return true;
@@ -120,7 +121,7 @@ void loop() {
     }
 
   #else
-    EmDebug()
+    EmDebug();
   #endif
 }
 

@@ -23,7 +23,7 @@
 /* Declaração dos ID's das Janelas do Nextion
  * ------------------------------------------ */ 
 uint8_t const JanelaSplash              =  0,
-              JanelaMenu_Acao           =  1,
+              JanelaMenuAcao            =  1,
               JanelaSelecao             =  2,
               JanelaConfigMain          =  3,
               JanelaConfigDataHora      =  4,

@@ -7,6 +7,7 @@
 #define   ChaveAcao(CodeAcao, R, G, B, Brilho) ((String)(String(CodeAcao) + String(R) + String(G) + String(B) + String(Brilho)))
 
 #define   pinControl        12
+#define   IDAcaoMsg         64
 
 String ChaveAcaoNew          = "";
 String ChaveAcaoOld          = "";
@@ -61,31 +62,42 @@ void ExecutarAcao(byte CodeAcao) {
           /* *******************************************************************
            * Opções para ação no quadro de Leds 
            * *******************************************************************/
-            switch(CodeAcao) {                                       
 
-              case 61:                                          // Mensagem na Tela
-                  if(ChaveAcaoNew != ChaveAcaoOld){
-                      char Texto[50] = {0};
-                      byte QtdeChar = 0;
-                      getTextoOnScreen(Texto, &QtdeChar);
-                      setDadosOnEEPROM(CodeAcao,  R,  G,  B,  Brilho);
-                      setTextoOnEEPROM(Texto, QtdeChar);
-                      ChaveAcaoOld = ChaveAcaoNew;              // Guarda a chave atual
-                      digitalWrite(pinControl, HIGH);
-                  }
-              break;
-              
-              default:
-                  if(ChaveAcaoNew != ChaveAcaoOld){
-                      setDadosOnEEPROM(CodeAcao,  R,  G,  B,  Brilho);
-                      ChaveAcaoOld = ChaveAcaoNew;              // Guarda a chave atual
-                      digitalWrite(pinControl, HIGH);
+            if(ChaveAcaoNew != ChaveAcaoOld){
 
-                  }
-              break;
-      
+                if(CodeAcao == IDAcaoMsg){                              // Mensagem na Tela
+                    char Texto[50] = {0};
+                    byte QtdeChar = 0;
+                    getTextoOnScreen(Texto, &QtdeChar);
+                    setTextoOnEEPROM(Texto, QtdeChar);
+                }
+                setDadosOnEEPROM(CodeAcao,  R,  G,  B,  Brilho);
+                ChaveAcaoOld = ChaveAcaoNew;                            // Guarda a chave atual
+                digitalWrite(pinControl, HIGH);
             }
 
+            /*
+            // switch(CodeAcao) {                                       
+            //   case IDAcaoMsg:                                           // Mensagem na Tela
+            //       if(ChaveAcaoNew != ChaveAcaoOld){
+            //           char Texto[50] = {0};
+            //           byte QtdeChar = 0;
+            //           getTextoOnScreen(Texto, &QtdeChar);
+            //           setTextoOnEEPROM(Texto, QtdeChar);
+            //           setDadosOnEEPROM(CodeAcao,  R,  G,  B,  Brilho);
+            //           ChaveAcaoOld = ChaveAcaoNew;                      // Guarda a chave atual
+            //           digitalWrite(pinControl, HIGH);
+            //       }
+            //   break;
+            //   default:
+            //       if(ChaveAcaoNew != ChaveAcaoOld){                     // Todas as outras ações
+            //           setDadosOnEEPROM(CodeAcao,  R,  G,  B,  Brilho);
+            //           ChaveAcaoOld = ChaveAcaoNew;                      // Guarda a chave atual
+            //           digitalWrite(pinControl, HIGH);
+            //       }
+            //   break;
+            // }
+            */
       }
 
   /******************************************************************************
@@ -97,8 +109,8 @@ void ExecutarAcao(byte CodeAcao) {
     ShowDataOnScreen();                             // Mantêm a variável de Data Atualizada        
     ShowHoraOnScreen();                             // Mantêm a variável de Hora Atualizada
     ShowTempSysOnScreen();                          // Mantêm a variável de temperatura do sistema atualizada
-    ShowTemperaturaOnScreen();                      // Mantêm a variável de temperatura atualizada
-    ShowHumidadeOnScreen();                         // Mantêm a variável de humidade atualizada
+    ShowTemperaturaOnScreen();                      // Mantêm a variável de temperatura ambiente atualizada
+    ShowHumidadeOnScreen();                         // Mantêm a variável de humidade ambiente atualizada
     setLDROnScreen();                               // Informa ao Screen o valor da variável de luminosidade
    
     Adormecido = millis() + 500;                    // Acrescenta mais 0,5 segundo

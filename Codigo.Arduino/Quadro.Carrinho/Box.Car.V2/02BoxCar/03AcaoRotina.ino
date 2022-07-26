@@ -29,7 +29,6 @@ void ResetAcao(String ChaveAcaoNew, led_t Led){
   }
 }
 
-
 void LedsAcesos(String ChaveAcaoNew, byte R, byte G, byte B, byte Brilho){
   if(ChaveAcaoNew != ChaveAcaoOld){
     BoxLedsRGB(R, G, B, Brilho);

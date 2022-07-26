@@ -12,41 +12,44 @@
 #define   AcaoIcon003  AcaoIcon002 + 3
 #define   AcaoIcon004  AcaoIcon003 + 3
 
-#define   AcaoIcon005  AcaoIcon004 + 3    // Ação mensagem (agora é ação cascata) A mensagem é a próxima
-#define   AcaoIcon006  AcaoIcon005 + 3    // vai ser modificado para ter a ação da cascata (atual: batman)
+#define   AcaoIcon005  AcaoIcon004 + 3    // Ação cascata
+#define   AcaoIcon006  AcaoIcon005 + 3    // Ação Mensagem
 #define   AcaoIcon007  AcaoIcon006 + 3
-#define   AcaoIcon008  AcaoIcon007 + 3
 
+#define   AcaoIcon008  AcaoIcon007 + 3
 #define   AcaoIcon009  AcaoIcon008 + 3
 #define   AcaoIcon010  AcaoIcon009 + 3
 #define   AcaoIcon011  AcaoIcon010 + 3
-#define   AcaoIcon012  AcaoIcon011 + 3
 
+#define   AcaoIcon012  AcaoIcon011 + 3
 #define   AcaoIcon013  AcaoIcon012 + 3
 #define   AcaoIcon014  AcaoIcon013 + 3
 #define   AcaoIcon015  AcaoIcon014 + 3
-#define   AcaoIcon016  AcaoIcon015 + 3
 
+#define   AcaoIcon016  AcaoIcon015 + 3
 #define   AcaoIcon017  AcaoIcon016 + 3
 #define   AcaoIcon018  AcaoIcon017 + 3
 #define   AcaoIcon019  AcaoIcon018 + 3
-#define   AcaoIcon020  AcaoIcon019 + 3
 
+#define   AcaoIcon020  AcaoIcon019 + 3
 #define   AcaoIcon021  AcaoIcon020 + 3
 #define   AcaoIcon022  AcaoIcon021 + 3
 #define   AcaoIcon023  AcaoIcon022 + 3
-#define   AcaoIcon024  AcaoIcon023 + 3
 
+#define   AcaoIcon024  AcaoIcon023 + 3
 #define   AcaoIcon025  AcaoIcon024 + 3
 #define   AcaoIcon026  AcaoIcon025 + 3
 #define   AcaoIcon027  AcaoIcon026 + 3
-#define   AcaoIcon028  AcaoIcon027 + 3
 
+#define   AcaoIcon028  AcaoIcon027 + 3
 #define   AcaoIcon029  AcaoIcon028 + 3
 #define   AcaoIcon030  AcaoIcon029 + 3
 #define   AcaoIcon031  AcaoIcon030 + 3
+
 #define   AcaoIcon032  AcaoIcon031 + 3
 #define   AcaoIcon033  AcaoIcon032 + 3
+#define   AcaoIcon034  AcaoIcon033 + 3
+#define   AcaoIcon035  AcaoIcon034 + 3
 
 String ChaveAcaoNew           = "";
 String ChaveAcaoOldx          = "";
@@ -206,14 +209,12 @@ void ExecutarAcao(byte CodeAcao, byte R, byte G, byte B, byte Brilho) {
           LedsVaiVem(ChaveAcaoNew, R, G, B, Brilho); 
         break;  
 
-        case 30:                                                  // Ação Vai Vem 
+        case AcaoIcon034:                                          // Sem Ação 
           LedsVaiVem(ChaveAcaoNew, R, G, B, Brilho);      
         break;  
 
-        case 31:                                                  // Ação variada 
-//          LedsFadeBox(ChaveAcaoNew, R, G, B, Brilho);      
-          LedsVaiVem(ChaveAcaoNew, R, G, B, Brilho); 
-//          MensagemDebug(ChaveAcaoNew, R, G, B, Brilho, 2);      //Em construção
+        case Aca0Icon035:                                          // Ação variada 
+          MensagemDebug(ChaveAcaoNew, R, G, B, Brilho, 2);
         break;  
 
   }
