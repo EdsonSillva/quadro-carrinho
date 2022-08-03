@@ -5,7 +5,8 @@
  * Alteração: jun/22
  ****************************************************/
 
-#define   ChaveAcao(CodeAcao, R, G, B, Brilho) ((String)(String(CodeAcao) + String(R) + String(G) + String(B) + String(Brilho)))
+//#define   ChaveAcao(CodeAcao, R, G, B, Brilho) ((String)(String(CodeAcao) + String(R) + String(G) + String(B) + String(Brilho)))
+#define   ChaveAcaoMacro(CodeAcao, R, G, B, Brilho) (String(CodeAcao) + String(R) + String(G) + String(B) + String(Brilho))
 
 #define   AcaoIcon001  49
 #define   AcaoIcon002  AcaoIcon001 + 3
@@ -15,55 +16,112 @@
 #define   AcaoIcon005  AcaoIcon004 + 3    // Ação cascata
 #define   AcaoIcon006  AcaoIcon005 + 3    // Ação Mensagem
 #define   AcaoIcon007  AcaoIcon006 + 3
-
 #define   AcaoIcon008  AcaoIcon007 + 3
+
 #define   AcaoIcon009  AcaoIcon008 + 3
 #define   AcaoIcon010  AcaoIcon009 + 3
 #define   AcaoIcon011  AcaoIcon010 + 3
-
 #define   AcaoIcon012  AcaoIcon011 + 3
+
 #define   AcaoIcon013  AcaoIcon012 + 3
 #define   AcaoIcon014  AcaoIcon013 + 3
 #define   AcaoIcon015  AcaoIcon014 + 3
-
 #define   AcaoIcon016  AcaoIcon015 + 3
+
 #define   AcaoIcon017  AcaoIcon016 + 3
 #define   AcaoIcon018  AcaoIcon017 + 3
 #define   AcaoIcon019  AcaoIcon018 + 3
-
 #define   AcaoIcon020  AcaoIcon019 + 3
+
 #define   AcaoIcon021  AcaoIcon020 + 3
 #define   AcaoIcon022  AcaoIcon021 + 3
 #define   AcaoIcon023  AcaoIcon022 + 3
-
 #define   AcaoIcon024  AcaoIcon023 + 3
+
 #define   AcaoIcon025  AcaoIcon024 + 3
 #define   AcaoIcon026  AcaoIcon025 + 3
 #define   AcaoIcon027  AcaoIcon026 + 3
-
 #define   AcaoIcon028  AcaoIcon027 + 3
+
 #define   AcaoIcon029  AcaoIcon028 + 3
 #define   AcaoIcon030  AcaoIcon029 + 3
 #define   AcaoIcon031  AcaoIcon030 + 3
-
 #define   AcaoIcon032  AcaoIcon031 + 3
+
 #define   AcaoIcon033  AcaoIcon032 + 3
 #define   AcaoIcon034  AcaoIcon033 + 3
 #define   AcaoIcon035  AcaoIcon034 + 3
+#define   AcaoIcon036  AcaoIcon035 + 3
 
-String ChaveAcaoNew           = "";
+//String ChaveAcaoNew           = "";
+char ChaveAcaoNew[15]         = {0};
 String ChaveAcaoOldx          = "";
 
 
+// String ChaveAcao(byte CodeAcao, byte R, byte G, byte B, byte Brilho){
+//     String ChaveAcaoLocal = "";
+//     ChaveAcaoNew = CodeAcao;
+//     ChaveAcaoNew += R;
+//     ChaveAcaoNew += G;
+//     ChaveAcaoNew += B;
+//     ChaveAcaoNew += Brilho;
+//     return ChaveAcaoNew;
+//    ChaveAcaoNew = "";
+//    ChaveAcaoNew.concat(CodeAcao);
+//    ChaveAcaoNew.concat(R);
+//    ChaveAcaoNew.concat(G);
+//    ChaveAcaoNew.concat(B);
+//    ChaveAcaoNew.concat(Brilho);
+// }
+
+void ChaveAcaoConcatena(byte CodeAcao, byte R, byte G, byte B, byte Brilho){
+  //ChaveAcaoNew = {0};
+
+}
+
 void ExecutarAcao(byte CodeAcao, byte R, byte G, byte B, byte Brilho) {
 
-  //CodeAcao = AcaoIcon005;
+    String ChaveAcaoLocal  = "";
+    char codigoGeral[15] = {0};
 
   /* *******************************************************************
-   * Opções para ação no quadro de Leds 
+   * Opções para as ações no quadro de Carrinhos 
    * *******************************************************************/
 
-    ChaveAcaoNew  = ChaveAcao(CodeAcao, R, G, B, Brilho);
+    Serial.print("\n Dentro de >> ExecutarAcao() <<"),Serial.print("\n");
+
+    // if(ChaveAcaoNew == ChaveAcaoLocal){
+    //   Serial.println("Antes de Carregar | ChaveAcaoNew = ChaveAcaoLocal  !!!");
+    // }
+
+    // ChaveAcaoNew  = ChaveAcaoMacro(CodeAcao, R, G, B, Brilho);
+    // ChaveAcaoLocal = ChaveAcaoNew;
+
+    // if(ChaveAcaoNew == ChaveAcaoLocal){
+    //   Serial.println("Depois de Carregar | ChaveAcaoNew = ChaveAcaoLocal  !!!");
+    // }
+
+    // sprintf(codigoGeral, "%d%d%d%d%d",CodeAcao,R,G,B,Brilho);
+
+    // ChaveAcaoNew = ChaveAcao(CodeAcao, R, G, B, Brilho);
+
+    // ChaveAcaoNew = String(codigoGeral);
+
+    // char buffer[20];
+    // unsigned int bufsize = 20;
+    // ChaveAcaoNew.toCharArray(buffer, bufsize);
+
+    Serial.print("\n.....ExecutarAcao(CodeAcao):"), Serial.print(CodeAcao);//,Serial.print("\n");
+    Serial.print("\n.....R:"),Serial.print(R);//,Serial.print("\n");
+    Serial.print("\n.....G:"),Serial.print(G);//,Serial.print("\n");
+    Serial.print("\n.....B:"),Serial.print(B);//,Serial.print("\n");
+    Serial.print("\n.....Br:"),Serial.print(Brilho);//,Serial.print("\n");
+    Serial.print("\n.....ChaveAcaoNew:"),Serial.print(ChaveAcaoNew),Serial.print("\n\n");
+    // Serial.print("\n.....ChaveAcaoNew:");
+    // Serial.print(buffer);
+    // Serial.print("\n\n");
+    // Serial.print("\n.....codigoGeral:"),Serial.print(codigoGeral),Serial.print("\n\n");
+    //delay(1000);
 
     switch (CodeAcao) {
 
@@ -72,6 +130,7 @@ void ExecutarAcao(byte CodeAcao, byte R, byte G, byte B, byte Brilho) {
         break;
 
         case AcaoIcon001:                                           // Ação Manter os Leds Aceso
+          Serial.print("  Exec. LedsAcesos()"),Serial.print("\n");
           LedsAcesos(ChaveAcaoNew, R, G, B, Brilho);      
         break;
 
@@ -93,7 +152,9 @@ void ExecutarAcao(byte CodeAcao, byte R, byte G, byte B, byte Brilho) {
         break;  
 
         case AcaoIcon005:                                          /// Ação cascata 
-          LedsCascata(ChaveAcaoNew, R, G, B, Brilho);              
+          Serial.print("Iniciando a Acao Cascata..."),Serial.print("\n");
+          // Serial.print("\n.....ChaveAcaoNew:"),Serial.print(ChaveAcaoNew),Serial.print("\n");
+//          LedsCascata(ChaveAcaoNew, R, G, B, Brilho);
         break;  
 
         case AcaoIcon006:                                          // Ação Msg box 
@@ -205,16 +266,19 @@ void ExecutarAcao(byte CodeAcao, byte R, byte G, byte B, byte Brilho) {
         break;  
 
         case AcaoIcon033:                                          // Ação acender mazda box 
-          //LedsShowBoxFixoAcao(ChaveAcaoNew, R, G, B, Brilho, BoxLedsMasdaRGB);      
-          LedsVaiVem(ChaveAcaoNew, R, G, B, Brilho); 
+          LedsShowBoxFixoAcao(ChaveAcaoNew, R, G, B, Brilho, BoxLedsMasdaRGB);      
         break;  
 
-        case AcaoIcon034:                                          // Sem Ação 
+        case AcaoIcon034:                                          // Ação acender bugatti box 
+          LedsShowBoxFixoAcao(ChaveAcaoNew, R, G, B, Brilho, BoxLedsBugattiRGB);      
+        break;  
+
+        case AcaoIcon035:                                          // Sem Vai-Vem (vários tipos - foram os promeiros códigos)
           LedsVaiVem(ChaveAcaoNew, R, G, B, Brilho);      
         break;  
 
-        case Aca0Icon035:                                          // Ação variada 
-          MensagemDebug(ChaveAcaoNew, R, G, B, Brilho, 2);
+        case AcaoIcon036:                                          // Ação Debug 
+//          MensagemDebug(ChaveAcaoNew, R, G, B, Brilho, 8);
         break;  
 
   }

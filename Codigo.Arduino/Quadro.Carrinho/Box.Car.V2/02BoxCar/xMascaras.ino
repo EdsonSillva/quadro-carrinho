@@ -163,7 +163,7 @@ void MascararLetra(char Letra, char LetraMascarada[], byte *pFimBitMascara){
       LetraMascarada[4]=0b11100000;
     break;
     
-    case 'ç': case 'Ç':
+    case '~':                   // ç e Ç (usando o ~ porque o ç não funciona)
       *pFimBitMascara=5;
       LetraMascarada[0]=0b11100000;
       LetraMascarada[1]=0b10000000;

@@ -1,7 +1,7 @@
 /******************************************************
  * Rotinas para controle de acesso na memória EEPROM
  * Desenvolvido por Edson Silva
- * I2C - Utiliza os pinos SDA(4) e SCL(5)
+ * I2C - Utiliza os pinos SDA(A4) e SCL(A5)
  * Date: 01/06/19
  * Alteração: jul/22
  *****************************************************/
@@ -106,10 +106,7 @@ byte LerEEPROM(int offSet) {
         break;              // Sai do loop
       }
     }
-
-    if(!IsMaxWait) {
-      Dado = Wire.read();
-    }
+    if(!IsMaxWait) Dado = Wire.read();
     Wire.endTransmission();
   return Dado;
 }

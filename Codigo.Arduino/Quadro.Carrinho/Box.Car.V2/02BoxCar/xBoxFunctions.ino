@@ -204,7 +204,6 @@ void BoxLedsRGB(led_t LedCor){
     ShowLeds(500);
 }
 
-
 void BoxLedsRGBXadrezFade(bool IniciarImpar, byte R, byte G, byte B, byte Br, int PercentualRecebido){
 
     byte  RLow, GLow, BLow, RHigh, GHigh, BHigh, RShow,  GShow,  BShow;
@@ -530,7 +529,7 @@ void SobeEmColunaInvertido(byte R, byte G, byte B, int wait) {
 
 /*****************************************************
  *  
- *  Rotinas de posição fixa dos carros
+ *        Rotinas de posição fixa dos carros
  *   
  *****************************************************/
 
@@ -574,13 +573,13 @@ void BoxLedsPorcheRGB(byte R, byte G, byte B, byte Br){
 }
 
 void BoxLedsTeslaRGB(byte R, byte G, byte B, byte Br){
-    MapaBox[13] = 0b0000000000111001;      // Linha 12 do quadro
+    MapaBox[13] = 0b0000000000111001;      // Linha 14 do quadro
 
     ShowMapaBoxes(R, G, B, Br, 50);
 }
 
 void BoxLedsBMWRGB(byte R, byte G, byte B, byte Br){
-    MapaBox[13] = 0b0000000111000001;      // Linha 12 do quadro
+    MapaBox[13] = 0b0000000111000001;      // Linha 14 do quadro
 
     ShowMapaBoxes(R, G, B, Br, 50);
 }
@@ -604,119 +603,134 @@ void BoxLedsPaganiRGB(byte R, byte G, byte B, byte Br){
 }
 
 void BoxLedsMacLarenRGB(byte R, byte G, byte B, byte Br){
-    MapaBox[9]  = 0b0000000001110001;      // Linha 09 do quadro
+    MapaBox[9]  = 0b0000000001110001;      // Linha 10 do quadro
     ShowMapaBoxes(R, G, B, Br, 50);
 }
 
 void BoxLedsAudiRGB(byte R, byte G, byte B, byte Br){
-    MapaBox[6]  = 0b0000000010000001;      // Linha 09 do quadro
+    MapaBox[6]  = 0b0000000010000001;      // Linha 07 do quadro
     ShowMapaBoxes(R, G, B, Br, 50);
 }
 
 void BoxLedsCorvetteRGB(byte R, byte G, byte B, byte Br){
-    MapaBox[11]  = 0b0000011111110001;      // Linha 09 do quadro
-    MapaBox[12]  = 0b0000011111110001;      // Linha 09 do quadro
+    MapaBox[11]  = 0b0000011111110001;      // Linha 12 do quadro
+    MapaBox[12]  = 0b0000011111110001;      // Linha 13 do quadro
 
     ShowMapaBoxes(R, G, B, Br, 50);
 }
 
 void BoxLedsNissanRGB(byte R, byte G, byte B, byte Br){
-    MapaBox[5]  = 0b0000000000011111;      // Linha 09 do quadro
+    MapaBox[5]  = 0b0000000000011111;      // Linha 06 do quadro
 
     ShowMapaBoxes(R, G, B, Br, 50);
 }
 
 void BoxLedsFerrariRGB(byte R, byte G, byte B, byte Br){
-    MapaBox[4]  = 0b0000001000000001;      // Linha 09 do quadro
-    MapaBox[7]  = 0b0000000000001111;      // Linha 09 do quadro
+    MapaBox[4]  = 0b0000001000000001;      // Linha 05 do quadro
+    MapaBox[7]  = 0b0000000000001111;      // Linha 08 do quadro
     
     ShowMapaBoxes(R, G, B, Br, 50);
 }
 
 void BoxLedsMercedesRGB(byte R, byte G, byte B, byte Br){
-    MapaBox[6]  = 0b0000000000000111;      // Linha 09 do quadro
+    MapaBox[6]  = 0b0000000000000111;      // Linha 07 do quadro
     ShowMapaBoxes(R, G, B, Br, 50);
 }
 
 void BoxLedsHondaRGB(byte R, byte G, byte B, byte Br){
-    MapaBox[6]   = 0b0000000000111001;      // Linha 09 do quadro
+    MapaBox[6]   = 0b0000000000111001;      // Linha 07 do quadro
     ShowMapaBoxes(R, G, B, Br, 50);
 }
 
 void BoxLedsAcuraRGB(byte R, byte G, byte B, byte Br){
-    MapaBox[13]  = 0b0000000000000111;      // Linha 09 do quadro
+    MapaBox[13]  = 0b0000000000000111;      // Linha 14 do quadro
     ShowMapaBoxes(R, G, B, Br, 50);
 }
 
 void BoxLedsJaguarRGB(byte R, byte G, byte B, byte Br){
-    MapaBox[7]  = 0b0000000000110001;      // Linha 09 do quadro
+    MapaBox[7]  = 0b0000000000110001;      // Linha 08 do quadro
     ShowMapaBoxes(R, G, B, Br, 50);
 }
 
 void BoxLedsVelozesFurososRGB(byte R, byte G, byte B, byte Br){
-    MapaBox[2]  = 0b0000111100000001;      // Linha 09 do quadro
-    MapaBox[3]  = 0b0001110000000001;      // Linha 09 do quadro
+    MapaBox[2]  = 0b0000111100000001;      // Linha 03 do quadro
+    MapaBox[3]  = 0b0001110000000001;      // Linha 04 do quadro
     ShowMapaBoxes(R, G, B, Br, 50);
 }
 
 void BoxLedsDodgeRGB(byte R, byte G, byte B, byte Br){
-    MapaBox[7]  = 0b0000000111000001;      // Linha 09 do quadro
+    MapaBox[7]  = 0b0000000111000001;      // Linha 08 do quadro
     MapaBox[8]  = 0b0000000001100001;      // Linha 09 do quadro
     ShowMapaBoxes(R, G, B, Br, 50);
 }
 
 void BoxLedsVolksRGB(byte R, byte G, byte B, byte Br){
-    MapaBox[6]  = 0b0000001000000001;      // Linha 09 do quadro
-    MapaBox[7]  = 0b0000111000000001;      // Linha 09 do quadro
+    MapaBox[6]  = 0b0000001000000001;      // Linha 07 do quadro
+    MapaBox[7]  = 0b0000111000000001;      // Linha 08 do quadro
     MapaBox[8]  = 0b0000110000000001;      // Linha 09 do quadro
-    MapaBox[9]  = 0b0000100000000001;      // Linha 09 do quadro
+    MapaBox[9]  = 0b0000100000000001;      // Linha 10 do quadro
     ShowMapaBoxes(R, G, B, Br, 50);
 }
 
 void BoxLedsFiatRGB(byte R, byte G, byte B, byte Br){
-    MapaBox[6]  = 0b0000000100000001;      // Linha 09 do quadro
+    MapaBox[6]  = 0b0000000100000001;      // Linha 07 do quadro
     ShowMapaBoxes(R, G, B, Br, 50);
 }
 
 void BoxLedsCadLacRGB(byte R, byte G, byte B, byte Br){
-    MapaBox[5]  = 0b0000000000100001;      // Linha 09 do quadro
+    MapaBox[5]  = 0b0000000000100001;      // Linha 06 do quadro
     MapaBox[8]  = 0b0010000000000001;      // Linha 09 do quadro
     ShowMapaBoxes(R, G, B, Br, 50);
 }
 
 void BoxLedsBentleyRGB(byte R, byte G, byte B, byte Br){
-    MapaBox[3]  = 0b0000000000000101;      // Linha 09 do quadro
+    MapaBox[3]  = 0b0000000000000101;      // Linha 04 do quadro
     ShowMapaBoxes(R, G, B, Br, 50);
 }
 
 void BoxLedsMasdaRGB(byte R, byte G, byte B, byte Br){
-    MapaBox[4]  = 0b0000000001100001;      // Linha 09 do quadro
+    MapaBox[4]  = 0b0000000001100001;      // Linha 05 do quadro
+    ShowMapaBoxes(R, G, B, Br, 50);
+}
+
+void BoxLedsBugattiRGB(byte R, byte G, byte B, byte Br){
+    MapaBox[3]  = 0b0000000100000001;      // Linha 04 do quadro
     ShowMapaBoxes(R, G, B, Br, 50);
 }
 
 void BoxLedsBuickRGB(byte R, byte G, byte B, byte Br){
-    MapaBox[5]  = 0b0000000001000001;      // Linha 09 do quadro
+    MapaBox[5]  = 0b0000000001000001;      // Linha 06 do quadro
     ShowMapaBoxes(R, G, B, Br, 50);
 }
 
 void ShowMsgBox(char Msg[], byte TamanhoMsg, byte R, byte G, byte B, byte Brilho, byte LinhaShow){
 
-    LinhaShow       = LinhaShow - 1;    // Necessário porque os arrays começam na posição 0
-    byte LinhaBox   = LinhaShow;
+    bool Label          = false;
+    LinhaShow           = LinhaShow - 1;      // Necessário porque os arrays começam na posição 0
+    byte LinhaBox       = LinhaShow;
     IniciarMapaBox();
     for(byte Letra = 0; Letra <= TamanhoMsg; Letra++){
       
       byte FimBitMascara      = 0;
-      char LetraMascarada[5]  = {0x00,0x00,0x00,0x00,0x00};
+      char LetraMascarada[5]  = {0x00,      // 1º Linha
+                                 0x00,      // 2º Linha
+                                 0x00,      // 3º Linha
+                                 0x00,      // 4º Linha
+                                 0x00};     // 5º Linha
+
       MascararLetra(Msg[Letra], LetraMascarada, &FimBitMascara);
       
       for(byte BitLetra = 7; BitLetra >= FimBitMascara; BitLetra--){
         for(byte PosicaoDaLetra = 0;PosicaoDaLetra <= 4; PosicaoDaLetra++){
-          bitWrite(MapaBox[LinhaBox], 0, bitRead(LetraMascarada[PosicaoDaLetra], BitLetra));    //Set o bit 0 da mascara com o bit da mascara da letra
+          bitWrite(MapaBox[LinhaBox], 0, bitRead(LetraMascarada[PosicaoDaLetra], BitLetra));      // Set o bit 0 da mascara com o bit da mascara da letra
           LinhaBox++;
         }
+
+        if(Label) bitWrite(MapaBox[15], 0, 1);    //Set o bit 0 da cor com 1 (para label)
+        else      bitWrite(MapaBox[15], 0, 0);    //Set o bit 0 da cor com 0 (para dado)
+        
         ShowMapaBoxes(R, G, B, Brilho, 40);                                                       // ShowMapaBoxes
-        ShifEsquerdaMapaBox(LinhaShow, LinhaShow + 4, 1);                                       
+        ShifEsquerdaMapaBox(LinhaShow, LinhaShow + 4, 1);
         LinhaBox   = LinhaShow;
         delay(60);
       }
@@ -725,7 +739,64 @@ void ShowMsgBox(char Msg[], byte TamanhoMsg, byte R, byte G, byte B, byte Brilho
         ShifEsquerdaMapaBox(LinhaShow, LinhaShow + 4, 1);                                         // Shift para espaço entre letras
         delay(60);
       }
-      if(!getValorPinAcao()){Letra = TamanhoMsg+1;}
+      if(!getValorPinAcao()){Letra = TamanhoMsg+1;}    //Abandona o Loop
+    }
+    for(byte ColunasBranco = 1; ColunasBranco <= 15; ColunasBranco++ ){
+       ShifEsquerdaMapaBox(LinhaShow, LinhaShow + 4, 1);                                         // Shift para espaço entre letras
+       ShowMapaBoxes(R, G, B, Brilho, 40);                                                       // ShowMapaBoxes
+       delay(60);
+    }
+}
+
+void ShowMsgBoxDebug(char Msg[], byte TamanhoMsg, byte R, byte G, byte B, byte Brilho, byte LinhaShow){
+
+//    Serial.print("\n...MsgDebug:"),Serial.print(Msg),Serial.print("\n");
+
+    LinhaShow       = LinhaShow - 1;    // Necessário porque os arrays começam na posição 0
+    byte LinhaBox   = LinhaShow;
+    bool Label = false;
+
+    IniciarMapaBox();
+
+    for(byte Letra = 0; Letra <= TamanhoMsg; Letra++){
+
+       if(Msg[Letra] == '<') {
+          Label = true;
+       } else if(Msg[Letra] == '>') {
+          Label = false;
+       } else { 
+
+          byte FimBitMascara      = 0;
+          char LetraMascarada[5]  = {0x00,    // 1º Linha
+                                     0x00,    // 2º Linha
+                                     0x00,    // 3º Linha
+                                     0x00,    // 4º Linha
+                                     0x00};   // 5º Linha
+                                     
+          MascararLetra(Msg[Letra], LetraMascarada, &FimBitMascara);
+          
+          for(byte BitLetra = 7; BitLetra >= FimBitMascara; BitLetra--){
+              for(byte PosicaoDaLetra = 0;PosicaoDaLetra <= 4; PosicaoDaLetra++){
+                  bitWrite(MapaBox[LinhaBox], 0, bitRead(LetraMascarada[PosicaoDaLetra], BitLetra));    //Set o bit 0 da mascara com o bit da mascara da letra
+                  LinhaBox++;
+              }
+
+              if(Label) bitWrite(MapaBox[15], 0, 1);    //Set o bit 0 da cor com 1 (para label)
+              else      bitWrite(MapaBox[15], 0, 0);    //Set o bit 0 da cor com 0 (para dado)
+              
+              ShowMapaBoxes(R, G, B, Brilho, 40);                                                       // ShowMapaBoxes
+              ShifEsquerdaMapaBox(LinhaShow, LinhaShow + 4, 1);                                       
+              LinhaBox   = LinhaShow;
+              delay(60);
+          }
+          if(Msg[Letra] != ' '){
+            ShowMapaBoxes(R, G, B, Brilho, 40);                                                       // ShowMapaBoxes
+            ShifEsquerdaMapaBox(LinhaShow, LinhaShow + 4, 1);                                         // Shift para espaço entre letras
+            delay(60);
+          }
+       }
+      
+       if(!getValorPinAcao()){Letra = TamanhoMsg+1;}    //Abandona o Loop
     }
     for(byte ColunasBranco = 1; ColunasBranco <= 15; ColunasBranco++ ){
        ShifEsquerdaMapaBox(LinhaShow, LinhaShow + 4, 1);                                         // Shift para espaço entre letras
@@ -739,13 +810,15 @@ void ShifEsquerdaMapaBox(byte PrimeiraLinha, byte UltimaLinha, byte QtdeBit){
     for(byte PosicaoShift = PrimeiraLinha; PosicaoShift <= UltimaLinha; PosicaoShift++ ){   // Shift Mascarabox
       MapaBox[PosicaoShift] = (MapaBox[PosicaoShift] << QtdeBit);
     }
+    MapaBox[15] = (MapaBox[15] << QtdeBit);       //Anda com a posição da Cor junto com a posição da letra
 }
 
 void ShowMapaBoxes(byte R, byte G, byte B, byte Br, byte LuzFundo){
 
     word MapaBoxLinha = 0x00;
-    byte Rb = LuzFundo,  Gb = LuzFundo,  Bb = LuzFundo;
+    byte RF = LuzFundo,  GF = LuzFundo,  BF = LuzFundo;
     byte Rd = 0,  Gd = 0,  Bd = 0;
+    byte RL = 156,  GL = 0,  BL = 0;  // Cor para Label
     
     if (Leds.getBrightness() != (uint8_t)Br) { setBrilho((int)Br); }
 
@@ -755,11 +828,17 @@ void ShowMapaBoxes(byte R, byte G, byte B, byte Br, byte LuzFundo){
       
       for(byte C = 1; C <= qtd_Colunas; C++){
 
-        if(bitRead(MapaBoxLinha, 16 - C)){ Rd = R, Gd = G, Bd = B; }
-        else { Rd = Rb, Gd = Gb, Bd = Bb; }
-      
+        if(bitRead(MapaBoxLinha, 16 - C)){
+          if(bitRead(MapaBox[15],16 - C)) {
+             Rd = R, Gd = G, Bd = B;     // É label usa a cor diferente
+          } else { 
+             Rd = 255, Gd = 0, Bd = 0;   // É informação (dado) usa cor informado da tela
+          }
+        } else { Rd = RF, Gd = GF, Bd = BF; }
+
         Leds.setPixelColor(PosicaoBoxCellInvertido(L, C), Leds.Color(Gd, Rd, Bd));
       }
+      if(!getValorPinAcao()) return;
     }
     VitrineLedsRGB(R, G, B, Br);
     ShowLeds(500);

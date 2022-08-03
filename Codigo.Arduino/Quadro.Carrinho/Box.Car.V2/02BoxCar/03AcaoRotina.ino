@@ -22,14 +22,19 @@ void ResetAcao(String ChaveAcaoNew, byte R, byte G, byte B, byte Brilho){
   }
 }
 
-void ResetAcao(String ChaveAcaoNew, led_t Led){
-  if(ChaveAcaoNew != ChaveAcaoOld){
-    BoxLedsRGB(Led.R, Led.G, Led.B, Led.Brilho);            // Apaga os leds
-    ChaveAcaoOld = ChaveAcaoNew;                            // Guarda a chave atual
-  }
-}
+//void ResetAcao(String ChaveAcaoNew, led_t Led){
+//  if(ChaveAcaoNew != ChaveAcaoOld){
+//    BoxLedsRGB(Led.R, Led.G, Led.B, Led.Brilho);            // Apaga os leds
+//    ChaveAcaoOld = ChaveAcaoNew;                            // Guarda a chave atual
+//  }
+//}
 
 void LedsAcesos(String ChaveAcaoNew, byte R, byte G, byte B, byte Brilho){
+
+  if(ChaveAcaoNew == ChaveAcaoOld){
+      Serial.println("...ChaveAcaoNew = ChaveAcaoOld  !!!");
+  }
+
   if(ChaveAcaoNew != ChaveAcaoOld){
     BoxLedsRGB(R, G, B, Brilho);
     while(getValorPinAcao());                     // Aguarda o cancelamento da ação 
@@ -76,105 +81,113 @@ void Mensagem(String ChaveAcaoNew, byte R, byte G, byte B, byte Brilho, byte Lin
 
 void MensagemDebug(String ChaveAcaoNew, byte R, byte G, byte B, byte Brilho, byte LinhaShow){
 
-    char Msg[50]  = {0};
-    byte QtdeChar = 0;
-    byte QtdeCharDebug = 0;
+   String sMsg;
+   byte CodeAcao         = 0;
+   char Msg[50]          = {0};
+   byte QtdeChar         = 0;
+   byte QtdeCharDebug    = 0;
 
-    getTextoOnEEPROM(Msg, &QtdeChar);
+   getDadosOnEEPROM(&CodeAcao, &R, &G, &B, &Brilho);       // Busca novamente os valores da EEPROM porque é usado o array de gamma no RGB 
 
-    char MsgDebug[QtdeChar + 25];
+   getTextoOnEEPROM(Msg, &QtdeChar);
 
-    if(QtdeChar < 50) {
-      int p = 0;
-      MsgDebug[p++] = 'M', MsgDebug[p++] = 'S', MsgDebug[p++] = 'G', MsgDebug[p++] = '.';
+   sMsg.concat("<Code:>"),         sMsg.concat(CodeAcao);
+   sMsg.concat(" <R:>"),           sMsg.concat(R);
+   sMsg.concat(" <G:>"),           sMsg.concat(G);
+   sMsg.concat(" <B:>"),           sMsg.concat(B);
+   sMsg.concat(" <Br:>"),          sMsg.concat(Brilho);
+   sMsg.concat(" <MSG:>"),         sMsg.concat(Msg); 
 
-      byte i = 0;
-      for(i; i < (QtdeChar); i++) {
-        MsgDebug[p++] = Msg[i];
-      }
-      MsgDebug[p++] = ' ';
-      MsgDebug[p++] = 'R', MsgDebug[p++] = '.', MsgDebug[p++] = (int)R;
-      MsgDebug[p++] = ' ';
-      MsgDebug[p++] = 'G', MsgDebug[p++] = '.', MsgDebug[p++] = (byte)G;
-      MsgDebug[p++] = ' ';
-      MsgDebug[p++] = 'B', MsgDebug[p++] = '.', MsgDebug[p++] = (byte)B;
-      MsgDebug[p++] = ' ';
-      MsgDebug[p++] = 'B', MsgDebug[p++] = 'r', MsgDebug[p++] = '.', MsgDebug[p++] = (byte)Brilho;
-      
-    }
-    QtdeCharDebug = QtdeChar + 25;
+   QtdeCharDebug = sMsg.length() + 1;
+   char MsgDebug[QtdeCharDebug];
 
-    while(getValorPinAcao()) {
-      ShowMsgBox(MsgDebug, QtdeChar - 1, R, G, B, Brilho, LinhaShow);
-    }
-    ChaveAcaoOld = ChaveAcaoNew;                  // Guarda a chave atual
+   sMsg.toCharArray(MsgDebug, QtdeCharDebug);
+
+   while(getValorPinAcao()) {
+     ShowMsgBoxDebug(MsgDebug, QtdeCharDebug - 2, R, G, B, Brilho, LinhaShow);
+   }
+   ChaveAcaoOld = ChaveAcaoNew;                  // Guarda a chave atual
 }
 
-void InicializaCascata(cascata_t cascata[], uint8_t *pSizeCascata = 1){
+void InicializaCascata(cascata_t cascata[], uint8_t SizeCascata){
 
-  uint8_t qtdColunas            = *pSizeCascata;
-  uint8_t colunas[qtdColunas]   = {0};
+//  uint8_t qtdColunas            = SizeCascata;
+ uint8_t colunas[SizeCascata]   = {0};
 
-  randomUnico(colunas, *pSizeCascata);
+//  Serial.print("\n.....Chamando randomUnico(colunas, pSizeCascata):"),Serial.print(qtdColunas),Serial.print("\n");
+//  Serial.print("\n.....Chamando randomUnico(colunas, SizeCascata):"),Serial.print("\n");
+ randomUnico(colunas, SizeCascata);
 
-  for(uint8_t i = 0; i < (*pSizeCascata - 1); i++){
+ for(uint8_t i = 0; i < (SizeCascata - 1); i++){
+   cascata[i].Coluna       = colunas[i];
+   cascata[i].Linha        = random(-3, 2);
+   cascata[i].Arrasto      = random(3,  6);
+   cascata[i].Percentual   = 100 / cascata[i].Arrasto;      // percentual usado para fazer o arrasto
+   cascata[i].Finalizado   = false;
 
-    cascata[i].Coluna       = colunas[i];
-    cascata[i].Linha        = random(-3, 2);
-    cascata[i].Arrasto      = random(3,  6);
-    cascata[i].Percentual   = 100 / cascata[i].Arrasto;      // percentual usado para fazer o arrasto
-    cascata[i].Finalizado   = false;
-    
-  }
+//    Serial.print("\n.....cascata[i]=:"),Serial.print(i),Serial.print("\n");
+//    Serial.print(".....cascata[i].Coluna:"),Serial.print(cascata[i].Coluna),Serial.print("\n");
+//    Serial.print(".....cascata[i].Linha:"),Serial.print(cascata[i].Linha),Serial.print("\n");
+//    Serial.print(".....cascata[i].Arrasto:"),Serial.print(cascata[i].Arrasto),Serial.print("\n");
+//    Serial.print(".....cascata[i].Percentual:"),Serial.print(cascata[i].Percentual),Serial.print("\n");
+//    Serial.print(".....cascata[i].Finalizado:"),Serial.print(cascata[i].Finalizado),Serial.print("\n");
+   delay(250);
 
+ }
 }
 
 void LedsCascata(String ChaveAcaoNew, byte R, byte G, byte B, byte Brilho) {
 
-  if(ChaveAcaoNew != ChaveAcaoOld){
-    
-    tmpWaitRotina                     = 11000;
-    uint8_t sizeCascata               = 15;
-    uint8_t colunasFeitas             = 0;
-    cascata_t cascata[sizeCascata];
+ if(ChaveAcaoNew != ChaveAcaoOld){
+   
+   tmpWaitRotina                     = 11000;
+   uint8_t sizeCascata               = 15;
+   uint8_t colunasFeitas             = 0;
+   cascata_t cascata[sizeCascata];
 
-    // Mantem a vitrine acesa
-    VitrineLedsRGB(R, G, B, Brilho);
+  //  Serial.print("\n.....R:"),Serial.print(R),Serial.print("\n");
+  //  Serial.print("\n.....G:"),Serial.print(G),Serial.print("\n");
+  //  Serial.print("\n.....B:"),Serial.print(B),Serial.print("\n");
+   
+   // Mantem a vitrine acesa
+   VitrineLedsRGB(R, G, B, Brilho);
 
-    while(getValorPinAcao()) {
+   while(getValorPinAcao()) {
 
-      if(tmpWaitRotina > 10000){
+     if(tmpWaitRotina > 10000){
 
-        InicializaCascata(cascata, &sizeCascata);
-        colunasFeitas = 0;
-        
-        while(getValorPinAcao() && colunasFeitas < 14){
-
-          for(uint8_t coluna = 0; coluna <= 14 && getValorPinAcao(); coluna++){
-
-            if(cascata[coluna].Linha > 0 && (!cascata[coluna].Finalizado)){
-
-              LedsShowBoxCascata(R, G, B, Brilho, cascata, coluna);
-              
-            }
-
-            if((cascata[coluna].Linha - cascata[coluna].Arrasto) > 14){
-              colunasFeitas++;
-              cascata[coluna].Finalizado = true;
-            }
-
-            cascata[coluna].Linha++;
-          }
-        }
-        
-        tmpWaitRotina = 0;
-        
-      } else { tmpWaitRotina++; delayMicroseconds(100);}
-    
-    }
-    ChaveAcaoOld = ChaveAcaoNew;                  // Guarda a chave atual
-  }
      
+      //  Serial.print("\n.....Chamando InicializaCascata(sizeCascata):"),Serial.print(sizeCascata),Serial.print("\n");
+       InicializaCascata(cascata, sizeCascata);
+       colunasFeitas = 0;
+       
+       while(getValorPinAcao() && colunasFeitas < 14){
+
+         for(uint8_t coluna = 0; coluna <= 14 && getValorPinAcao(); coluna++){
+
+           if(cascata[coluna].Linha > 0 && (!cascata[coluna].Finalizado)){
+
+             LedsShowBoxCascata(R, G, B, Brilho, cascata, coluna);
+             
+           }
+
+           if((cascata[coluna].Linha - cascata[coluna].Arrasto) > 14){
+             colunasFeitas++;
+             cascata[coluna].Finalizado = true;
+           }
+
+           cascata[coluna].Linha++;
+         }
+       }
+       
+       tmpWaitRotina = 0;
+       
+     } else { tmpWaitRotina++; delayMicroseconds(100);}
+   
+   }
+   ChaveAcaoOld = ChaveAcaoNew;                  // Guarda a chave atual
+ }
+    
 }
 
 void LedsFuncaoAcao(String ChaveAcaoNew, byte R, byte G, byte B, byte Brilho, pTipoVoid pFuncaoAcao){
@@ -229,30 +242,35 @@ void LedsVaiVem(String ChaveAcaoNew, byte R, byte G, byte B, byte Brilho){
   }
 }
 
-void randomUnico(uint8_t bufferValores[], uint8_t *pSizeBuffer){
+void randomUnico(uint8_t bufferValores[], uint8_t SizeBuffer){
 
-  uint8_t   coluna       = 0;
-  bool      valorExiste;
-  uint8_t   minimo        = 1;
-  uint8_t   maximo        = *pSizeBuffer + 1;
-  uint8_t   valor;
+ bool      valorExiste;
+ uint8_t   coluna        = 0;
+ uint8_t   minimo        = 1;
+ uint8_t   maximo        = SizeBuffer + 1;
+ uint8_t   valor;
 
-  randomSeed(random());
+ //Serial.print("\n.....Dentro randomUnico(colunas, SizeBuffer):");
+ 
+ randomSeed(random());
 
-  while(coluna < *pSizeBuffer){
+ while(coluna < SizeBuffer){
 
-    valor = random(minimo, maximo);
+   valor = random(minimo, maximo);
 
-    valorExiste = false;
-    for(int i = 0; i <= *pSizeBuffer; i++ ){
-      if(valor == bufferValores[i]){
-        valorExiste = true;
-        break;
-      }
-    }
-    if(!valorExiste){
-      bufferValores[coluna] = valor;
-      coluna++;
-    }
-  }
+   valorExiste = false;
+   for(int i = 0; i <= SizeBuffer; i++ ){
+     if(valor == bufferValores[i]){
+       valorExiste = true;
+       break;
+     }
+   }
+   if(!valorExiste){
+     bufferValores[coluna] = valor;
+     coluna++;
+   }
+ }
 }
+
+
+

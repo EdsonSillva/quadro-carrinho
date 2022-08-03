@@ -36,6 +36,12 @@ typedef struct led_t {
   byte Brilho;
 } led_t;
 
+typedef struct chaveAcao_t {
+  byte  Code;
+  led_t RGB;
+} chaveAcao_t;
+
+chaveAcao_t ChaveAcao;      // Guarda o Codigo da acao e as informacoes do RGB
 
 byte      CodeAcao          = 0xff,
           R                 = 0xff,
@@ -66,6 +72,15 @@ const uint8_t PROGMEM gamma8[] = {
   177,180,182,184,186,189,191,193,196,198,200,203,205,208,210,213,
   215,218,220,223,225,228,231,233,236,239,241,244,247,249,252,255 };
   
+
+void InicializarChaveCode(){
+  ChaveAcao.Code = 0;
+  ChaveAcao.RGB.R = 0;
+  ChaveAcao.RGB.G = 0;
+  ChaveAcao.RGB.B = 0;
+  ChaveAcao.RGB.Brilho = 0;
+}
+
 void setup() {
 
 #if DEBUG == true
@@ -73,6 +88,7 @@ void setup() {
   while(!Serial);
 #endif
 
+  InicializarChaveCode();                     // Inicializa a ChaveCode com Zeros
   pinAcao = getPinAcao();                     // Obtem o Pino de controle da Ação
   pinMode(pinAcao, INPUT);
   IniciarLeds(50);                            // inicializando os leds da fita com o brilho em default em 50
@@ -84,17 +100,19 @@ void setup() {
 }
 
 bool inline getValorPinAcao() {
-
-    #if DEBUG == true
+//bool getValorPinAcao() {
+#if DEBUG == true
+      Serial.print("Lendo Pino:"),Serial.print(pinAcao); //,Serial.print("\n");
       return digitalRead(pinAcao);
-    #else
+#else
+        Serial.print("Retornando direto (true):"),Serial.print(pinAcao),Serial.print("\n");
       return true;
-    #endif
+#endif
 }
 
 void loop() {
 
-  #if DEBUG == false
+#if DEBUG == false
 
     pinAcaoValor = getValorPinAcao();
       
@@ -120,9 +138,9 @@ void loop() {
         tmpWait++;
     }
 
-  #else
+#else
     EmDebug();
-  #endif
+#endif
 }
 
 #if DEBUG == true
@@ -130,6 +148,7 @@ void loop() {
 void EmDebug(){
   
   pinAcaoValor = getValorPinAcao();
+  Serial.print(" | pinAcaoValor:"),Serial.print(pinAcaoValor),Serial.print("\n");
     
   if(tmpWait >= 20000 || pinAcaoValor){
 
@@ -139,6 +158,8 @@ void EmDebug(){
         Serial.print("\n Lendo a EEPROM..."),Serial.print("\n");
 
         getDadosOnEEPROM(&CodeAcao, &R, &G, &B, &Brilho);
+
+        //CodeAcao = 61;
 
         Serial.print("\n EEPROM Lida"),Serial.print("\n");
         Serial.print("\nCode:"),Serial.print(CodeAcao),Serial.print("\n");
@@ -154,19 +175,20 @@ void EmDebug(){
 
         Serial.print("\nQtdeMsg:"),Serial.print(QtdeChar),Serial.print("\n");
         Serial.print("\nMsg:"),Serial.print(Msg),Serial.print("\n");
-        Serial.print("\nScan finalizado. Processando Comando...\n");
+        Serial.print("\nScan finalizado e >> EXECUTANDO O COMANDO << ...\n");
         
         ExecutarAcao(CodeAcao, pgm_read_byte(&gamma8[R]), pgm_read_byte(&gamma8[G]), pgm_read_byte(&gamma8[B]), Brilho);
         
         delay(5);   // da  um tempo para os resets das portas
-        ResetEfetuado = !ResetEfetuado;
+        ResetEfetuado = false;
         
-        Serial.print("\nScan finalizado. Novo Scan em 1 minuto...\n");
-        delay(60000);
+        Serial.print("\nScan finalizado. Novo Scan em 05 segundos...\n");
+        delay(5000);
         Serial.print("\nIniciando o Scan da EEPROM novamente\n\n");
 
-      } else {
+      } else {    // Este else serve para minimizar a execução do reset nos leds do quadro de carrinhos
         if(!ResetEfetuado){
+          Serial.print("\nExecutando Else do Loop()\n\n");
           ExecutarAcao(0, 0, 0, 0, Brilho);   //Reset comandos 
           ResetEfetuado = !ResetEfetuado;
         }
